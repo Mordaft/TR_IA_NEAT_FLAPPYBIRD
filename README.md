@@ -31,7 +31,7 @@ After sone googling this is the selection of open source projects incluided:
 - neataptic :
     - The Neuro-evolution on steroids, right in the browser: https://wagenaartje.github.io/neataptic/
     - The built-in NEAT class documentation: https://wagenaartje.github.io/neataptic/docs/neat/ 
-- pixijs :
-    - The Game HTML5 Creation Engine:  https://github.com/pixijs/pixijs
-    - The guide to learn Howto use pixijs:  https://github.com/kittykatattack/learningPixi
+- phaser3 :
+    - Base FlappyBird game creation: https://github.com/digitsensitive/phaser3-flappy-bird/tree/master
+
 
