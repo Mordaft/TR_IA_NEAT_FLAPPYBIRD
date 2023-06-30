@@ -22,6 +22,6 @@ let GameConfig: Phaser.Types.Core.GameConfig = {
 window.addEventListener("load", () => {
 
   let game = new Game(GameConfig);
-  
+   
 });
 

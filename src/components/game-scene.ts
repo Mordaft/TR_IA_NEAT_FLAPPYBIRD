@@ -1,15 +1,9 @@
-/**
- * @author       Digitsensitive <digit.sensitivee@gmail.com>
- * @copyright    2019 Digitsensitive
- * @description  Flappy Bird: Game Scene
- * @license      Digitsensitive
- */
 import { Bird } from "./bird";
 import { Pipe } from "./pipe";
 
 
 export class GameScene extends Phaser.Scene {
-  private birds!: Bird[];
+  private bird!: Bird;
   private pipes!: Phaser.GameObjects.Group;
   private background!: Phaser.GameObjects.TileSprite;
   private scoreText!: Phaser.GameObjects.BitmapText;
@@ -18,7 +12,6 @@ export class GameScene extends Phaser.Scene {
     super({
       key: "GameScene"
     });
-    this.birds = [];
   }
 
   init(): void {
@@ -49,6 +42,8 @@ export class GameScene extends Phaser.Scene {
 
     this.pipes = this.add.group({ classType: Pipe });
 
+    this.bird = new Bird(this, 50, 100, "bird");
+
     // *****************************************************************
     // TIMER
     // *****************************************************************
@@ -64,59 +59,36 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     let _this = this;
-    this.background.tilePositionX += 4;
-    if (this.birdsAreAlive()) {
-      this.birds.forEach(function(bird:Bird){
-        bird.update();
-        _this.physics.overlap(
-            bird,
-            _this.pipes,
-            function() {
-              bird.setDead(true);
-            },
-            undefined,
-            _this
-          );
-          
-          if (bird.y > _this.sys.canvas.height) {
-            bird.setDead(true);
+    if (!this.bird.getDead()) {
+      this.background.tilePositionX += 4;
+      this.bird.update();
+      this.physics.overlap(
+        this.bird,
+        this.pipes,
+        function() {
+          _this.bird.setDead(true);
+        },
+        undefined,
+        this
+      );
+    } else {
+      Phaser.Actions.Call(
+        this.pipes.getChildren(),
+        function(pipe:any) {
+          if (pipe!=null){
+            pipe.setVelocityX(0);
           }
-    
+        },
+        this
+      );
 
-      });
-    } 
-    // if (!this.birdsAreAlive()){
-        // Phaser.Actions.Call(
-        //   this.pipes.getChildren(),
-        //   function(pipe:any) {
-        //     if (pipe!=null){
-        //       pipe.setVelocityX(0);
-        //     }
-        //   },
-        //   this
-        // );
-        // _this.scene.restart();
-    // }
-  }
-
-  private birdsAreAlive():boolean{
-    var alive: boolean = false;
-    for (var index=0 ; index< this.birds.length; index++){
-      if (!this.birds[index].getDead()){
-          alive= true;
-          continue;
+      if (this.bird.y > this.sys.canvas.height) {
+        this.scene.restart();
       }
     }
-    return alive;
-  }
-
-  public addBird(): Bird{
-    return new Bird(this, 50, 100, "bird");
   }
 
   private addNewRowOfPipes(): void {
-    //
-    console.info("Adding more pipes");
     // update the score
     this.registry.values.score += 1;
     this.scoreText.setText(this.registry.values.score);

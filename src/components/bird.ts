@@ -1,4 +1,5 @@
 export class Bird extends Phaser.Physics.Arcade.Sprite {
+  private jumpKey!: Phaser.Input.Keyboard.Key;
   private isDead: boolean;
   private isFlapping: boolean;
 
@@ -27,19 +28,17 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
     this.setGravityY(1000);
 
     // input
-    // if (this.scene!= null && this.scene.input !=null && this.scene.input.keyboard !=null){
-    //     this.jumpKey = this.scene.input.keyboard.addKey(
-    //     Phaser.Input.Keyboard.KeyCodes.SPACE
-    //     );
-    // }
+    if (this.scene!= null && this.scene.input !=null && this.scene.input.keyboard !=null){
+        this.jumpKey = this.scene.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.SPACE
+        );
+    }
 
     this.scene.add.existing(this);
   }
 
-  flapp(){
-    this.isFlapping = true;
-  }
 
+  
   update(): void {
     // handle angle change
     if (this.angle < 30) {
@@ -47,9 +46,9 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
     }
 
     // handle input
-    if (this.isFlapping) {
+    if (this.jumpKey.isDown && !this.isFlapping) {
       // flap
-      this.isFlapping = false;
+      this.isFlapping = true;
       this.setVelocityY(-350);
       this.scene.tweens.add({
         targets: this,
@@ -57,7 +56,9 @@ export class Bird extends Phaser.Physics.Arcade.Sprite {
         duration: 150,
         ease: "Power0"
       });
-    } 
+    } else if (this.jumpKey.isUp && this.isFlapping) {
+      this.isFlapping = false;
+    }
 
     // check if off the screen
     if (this.y + this.height > this.scene.sys.canvas.height) {
