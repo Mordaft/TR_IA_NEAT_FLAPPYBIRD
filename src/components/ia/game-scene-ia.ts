@@ -8,12 +8,11 @@ export class GameSceneIA extends Phaser.Scene {
   private background!: Phaser.GameObjects.TileSprite;
   private scoreText!: Phaser.GameObjects.BitmapText;
   private birdsAliveText!: Phaser.GameObjects.BitmapText;
-  private firstXPipe!:number;
-  private nextXPipe!:number;
-  private firstBottomPipe!:number;
-  private firstTopPipe!:number;
-  private nextBottomPipe!:number;
-  private nextTopPipe!:number;
+  private firstTopPipe!:Pipe;
+  private firstBottomPipe!:Pipe;
+  private nextTopPipe!:Pipe;
+  private nextBottomPipe!:Pipe;
+  private changePipeDelay!:number;
 
   constructor() {
     super({
@@ -88,13 +87,22 @@ export class GameSceneIA extends Phaser.Scene {
   update(): void {
     let _this = this;
     this.background.tilePositionX += 4;
+
+    if (_this.nextTopPipe != this.firstTopPipe){
+      _this.changePipeDelay = 0;
+    }
+
+    if ( this.changePipeDelay == 0 ){
+      _this.firstTopPipe = _this.nextTopPipe;    
+      _this.firstBottomPipe = _this.nextBottomPipe;
+    }
+    else{
+      this.changePipeDelay -= 1;
+    }
+
+
     if (this.birdsAreAlive()) {
       this.birds.forEach(function(bird:BirdIA){
-        console.info("update", _this.background.tilePositionX);
-        if ( (_this.background.tilePositionX) % 80 == 1 ){
-          _this.firstBottomPipe = _this.nextBottomPipe;
-          _this.firstTopPipe = _this.nextTopPipe;    
-        }
         bird.update(_this.firstTopPipe, _this.firstBottomPipe);
         _this.physics.overlap(
             bird,
@@ -106,7 +114,9 @@ export class GameSceneIA extends Phaser.Scene {
             _this
           );
           
-          if (bird.y > _this.sys.canvas.height) {
+          if (bird.y > _this.sys.canvas.height ||
+              bird.y < -1
+            ) {
             bird.setDead(true);
           }
 
@@ -123,7 +133,16 @@ export class GameSceneIA extends Phaser.Scene {
           },
           this
         );
+        _this.printReport();
         _this.scene.restart();
+    }
+  }
+
+  private printReport(){
+    for (var index=0 ; index< this.birds.length; index++){
+      if (this.birds[index].getFitness() > 200){
+        console.info(index + 1, this.birds[index].print());
+      }
     }
   }
 
@@ -142,7 +161,7 @@ export class GameSceneIA extends Phaser.Scene {
   }
 
   public addBird(): BirdIA{
-    return new BirdIA(this, 50, 100, "birdIA");
+    return new BirdIA(this, 50, 100, "birdIA", undefined, -1, -1);
   }
 
   private addNewRowOfPipes(): void {
@@ -157,11 +176,9 @@ export class GameSceneIA extends Phaser.Scene {
     for (let i = 0; i < 10; i++) {
       if (i !== hole && i !== hole + 1 && i !== hole + 2) {
         if (i === hole - 1) {
-          this.addPipe(400, i * 60, 0);
-          this.nextTopPipe = i*60;
+          this.nextTopPipe = this.addPipe(400, i * 60, 0);
         } else if (i === hole + 3) {
-          this.addPipe(400, i * 60, 1);
-          this.nextBottomPipe = i*60;
+          this.nextBottomPipe = this.addPipe(400, i * 60, 1);
         } else {
           this.addPipe(400, i * 60, 2);
         }
@@ -169,10 +186,10 @@ export class GameSceneIA extends Phaser.Scene {
     }
   }
 
-  private addPipe(x: number, y: number, frame: number): void {
+  private addPipe(x: number, y: number, frame: number): Pipe {
     // create a new pipe at the position x and y and add it to group
-    this.pipes.add(
-      new Pipe(this, x , y, "pipe", frame)
-    );
+    let ret = new Pipe(this, x , y, "pipe", frame)
+    this.pipes.add(ret);  
+    return ret;
   }
 }
