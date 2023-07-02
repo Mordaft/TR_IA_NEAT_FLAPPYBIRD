@@ -1,5 +1,5 @@
 import { Bird } from "./bird";
-import { Pipe } from "./pipe";
+import { Pipe } from "../common/pipe";
 
 
 export class GameScene extends Phaser.Scene {
@@ -28,7 +28,7 @@ export class GameScene extends Phaser.Scene {
 
   create(): void {
     this.background = this.add
-      .tileSprite(0, 0, 390, 600, "background")
+      .tileSprite(0, 0, 400, 600, "background")
       .setOrigin(0, 0);
 
     this.scoreText = this.add
@@ -82,8 +82,9 @@ export class GameScene extends Phaser.Scene {
         this
       );
 
-      if (this.bird.y > this.sys.canvas.height) {
-        this.scene.restart();
+      
+      if ( this.bird.y > this.sys.canvas.height) {
+          this.scene.restart();
       }
     }
   }
