@@ -258,7 +258,11 @@ export class GameSceneIA extends Phaser.Scene {
       edges: edgessarr
     }
     let container:HTMLElement = document.getElementById("graph") as HTMLElement;
-    var options = {};
+    var options = {
+      nodes: {
+        shape: "dot"
+      }
+    };
     var network = new vis.Network(container, data, options);
 
   }
