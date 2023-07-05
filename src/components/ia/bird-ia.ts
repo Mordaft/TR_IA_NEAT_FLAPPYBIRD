@@ -2,12 +2,8 @@ import { Pipe } from "../common/pipe";
 
 export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   private isDead: boolean;
-  // private isFlapping: number;
-  private weightTop!: number;
-  private weightBottom!: number;
-  private weightY!: number;
   private fitness!:number;
-  private BIAS:number = 600;
+  private brain: any;
 
   public getDead(): boolean {
     return this.isDead;
@@ -19,8 +15,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     this.setActive(false);
   }
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number, weightTop?:number, weightBottom?:number , weightY?:number )  {
+  constructor(genome: any, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
     super(scene, x, y, texture, frame);
+
+    //console.info("BirdIA", genome);
 
     // sprite
     this.setScale(3);
@@ -40,43 +38,56 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     // this.weightY = -7;
     // this.weightTop = -2.3
     // this.weightBottom = -5
-    if (weightTop == null || weightTop == -1){
-      this.weightTop = Math.random()* - 120;
-    }
-    else {  
-      this.weightTop = Math.random()*30 - weightTop;
-    }
 
-    if (weightBottom == null || weightBottom == -1){
-      this.weightBottom = Math.random()*30;
-    }
-    else {  
-      this.weightBottom = Math.random()*5 + weightBottom;
-    }
-    if (weightY == null || weightY == -1){
-      this.weightY = Math.random()* - 30;
-    }
-    else {  
-      this.weightY = Math.random()*5 - weightY;
-    }
+    // if (weightTop == null || weightTop == -1){
+    //   this.weightTop = Math.random()* - 120;
+    // }
+    // else {  
+    //   this.weightTop = Math.random()*30 - weightTop;
+    // }
 
+    // if (weightBottom == null || weightBottom == -1){
+    //   this.weightBottom = Math.random()*30;
+    // }
+    // else {  
+    //   this.weightBottom = Math.random()*5 + weightBottom;
+    // }
+    // if (weightY == null || weightY == -1){
+    //   this.weightY = Math.random()* - 30;
+    // }
+    // else {  
+    //   this.weightY = Math.random()*5 - weightY;
+    // }
 
+    this.brain = genome;
+    this.brain.score = 1;
     this.scene.add.existing(this);
   }
 
-
   shouldIFlap(topPipe:Pipe, bottomPipe:Pipe): boolean{
-    
-    
-    let addition = (this.y * this.weightY) + ((topPipe.y-this.y) * this.weightTop) + ((bottomPipe.y-this.y) * this.weightBottom) + this.BIAS;
-    let formula =  Math.tanh(addition) ; 
+
+    let input = {
+                  myPositionY : this.y,
+                  distanceToTopPipe: Math.abs(this.y - topPipe.y),
+                  distanceToBottonPipe: Math.abs(this.y - (bottomPipe.y + 20)),
+                  //distanceXtoPipes: Math.abs(this.x - topPipe.x),
+                  //myVelocityY : this.body?.velocity,
+              }
+
+    let output = this.brain.activate(input);
+
+    //console.info(input, output);
+    return output[0];
+
+    // let addition = (this.y * this.weightY) + ((topPipe.y-this.y) * this.weightTop) + ((bottomPipe.y-this.y) * this.weightBottom) + this.BIAS;
+    // let formula =  Math.tanh(addition) ; 
     
     //console.info(formula, addition, this.y, this.weightY, this.weightTop, this.weightBottom, this.BIAS );
 
-    if (formula < 0.5 ){
-      return true;
-    }
-    return false;
+    // if (formula < 0.5 ){
+    //   return true;
+    // }
+    // return false;
     
     // let value = false;
     // //let passBotton = (this.y > (bottomPipe + 90 ));
@@ -92,10 +103,14 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   update(topPipe:Pipe , bottomPipe:Pipe ): void {
     // Every tick fitness grow:
     if (this.isDead ){
+      //console.info(this.brain , this.brain.score);
       return;
     }
 
-    this.fitness += 1;
+    let distanceToMiddleRatio = 1 + Math.abs( 1 / Math.abs(this.y - ( topPipe.y - ((topPipe.y - bottomPipe.y) / 2 ))) )
+    this.fitness += (distanceToMiddleRatio);
+    this.brain.score +=  (distanceToMiddleRatio); 
+   
 
     // handle angle change
     if (this.angle < 30) {
@@ -131,11 +146,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   print(): object{
     let me = 
     {
-      fitness: this.fitness, 
-      wy: this.weightY,
-      wt: this.weightTop,
-      wb: this.weightBottom,
-      bias: this.BIAS
+      brain: this.brain
     }
     return me;
   }

@@ -8,6 +8,12 @@
           "fontDataURL": "src/assets/fonts/font.fnt"
         },
         {
+          "type": "bitmapFont",
+          "key": "atari",
+          "textureURL": "src/assets/fonts/atari.png",
+          "fontDataURL": "src/assets/fonts/atari.xml"
+        },
+        {
           "type": "image",
           "key": "background",
           "url": "src/assets/images/bg.png"

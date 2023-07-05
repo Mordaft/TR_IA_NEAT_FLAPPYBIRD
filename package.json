@@ -4,16 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "clean": "rm -fr node_modules dist yarn.lock && yarn cache clean",
     "dev": "vite --port 7173 --open",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 7173 --open"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "geojson": "^0.5.0",
     "neataptic": "^1.4.7",
-    "phaser": "^3.60.0"
+    "phaser": "^3.60.0",
+    "vis-network": "^9.1.6",
+    "webcola": "^3.4.0"
   }
 }
