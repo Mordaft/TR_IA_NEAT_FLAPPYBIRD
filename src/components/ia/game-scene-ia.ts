@@ -1,7 +1,7 @@
 import { Neat, methods, architect } from "neataptic";
 import { Pipe } from "../common/pipe";
 import { BirdIA } from "./bird-ia";
-import * as vis from 'vis-network';
+import { Graph } from "../graph/graph";
 
 
 export const BIRD_AMOUNT:number = 100;
@@ -27,6 +27,7 @@ export class GameSceneIA extends Phaser.Scene {
   private changePipeDelay!:number;
   private brain:Neat;
   private hiScore!:number;
+  private graph: Graph;
 
   inputs =  {
     myPositionY: 100,
@@ -40,6 +41,8 @@ export class GameSceneIA extends Phaser.Scene {
     super({
       key: "GameSceneIA"
     });
+
+    this.graph = new Graph("graph");
 
     this.hiScore = 0;
 
@@ -226,46 +229,11 @@ export class GameSceneIA extends Phaser.Scene {
 
   private printReport(){
 
-    let mygraph = this.brain.population[0].graph(300, 300) 
-    this.graphIt(mygraph);
+    let mygraph = this.brain.population[0].graph(300, 300);
+    this.graph.graphIt(mygraph);
     
   }
 
-  private graphIt(mygraph){
-
-    let nodesarr: { id: any; label: any; }[] = []    
-    let mynodes = mygraph.nodes;
-    mynodes.forEach(function(mynode: { id: any; name: any; }){
-      let node = {
-        id: mynode.id,
-        label: mynode.name
-      }
-      nodesarr.push(node);
-    })
-
-    let edgessarr: { from: any; to: any; }[]= []    
-    let mylinks = mygraph.links;
-    mylinks.forEach(function(mylink: { source: any; target: any; }){
-      let edge = {
-        from: mylink.source,
-        to: mylink.target
-      }
-      edgessarr.push(edge);
-    })
-    
-    let data = {
-      nodes: nodesarr,
-      edges: edgessarr
-    }
-    let container:HTMLElement = document.getElementById("graph") as HTMLElement;
-    var options = {
-      nodes: {
-        shape: "dot"
-      }
-    };
-    var network = new vis.Network(container, data, options);
-
-  }
 
   private birdsAreAlive():boolean{
     var alive: boolean = false;
