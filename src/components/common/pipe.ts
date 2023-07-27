@@ -14,7 +14,7 @@ export class Pipe extends Phaser.Physics.Arcade.Image {
     
     this.setVelocityX(-200);
     this.setSize(20, 20);
-    this.setGravityY(-300);
+    this.setGravityY(-350);
     
 
     this.scene.add.existing(this);

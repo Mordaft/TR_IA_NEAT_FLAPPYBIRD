@@ -1,15 +1,15 @@
-import { Neat, methods, architect } from "neataptic";
+import { Neat, methods, architect, Network } from "neataptic";
 import { Pipe } from "../common/pipe";
 import { BirdIA } from "./bird-ia";
 import { Graph } from "../graph/graph";
 
 
 export const BIRD_AMOUNT:number = 100;
-export const MUTATION_RATE:number = 0.5;
-export const START_HIDDEN_SIZE:number = 0;
+export const MUTATION_RATE:number = 0.25;
+export const START_HIDDEN_SIZE:number = 1;
 export const INPUTS_SIZE:number = 3;
 export const OUTPUTS_SIZE:number = 1;
-export const ELITISM_PERCENT:number = 0.10;
+export const ELITISM_PERCENT:number = 0.15;
 
 
 export class GameSceneIA extends Phaser.Scene { 
@@ -24,29 +24,25 @@ export class GameSceneIA extends Phaser.Scene {
   private firstBottomPipe!:Pipe;
   private nextTopPipe!:Pipe;
   private nextBottomPipe!:Pipe;
-  private changePipeDelay!:number;
   private brain:Neat;
   private hiScore!:number;
+  private hiFitness!:number;
   private graph: Graph;
 
-  inputs =  {
-    myPositionY: 100,
-    distanceToTopPipe: 250,
-    distanceToBottonPipe: 250,
-    distanceXToPipes: 250,
-    myVelocity: 100
-  }
 
   constructor() {
+    
     super({
       key: "GameSceneIA"
     });
+    let _this = this;
+    this.hiFitness = 0;
 
     this.graph = new Graph("graph");
 
     this.hiScore = 0;
 
-    this.brain = new Neat(5, 1 , null, {
+    this.brain = new Neat(5, 1 , _this.fitness(), {
         mutation: [
           methods.mutation.ADD_NODE,
           methods.mutation.SUB_NODE,
@@ -89,6 +85,9 @@ export class GameSceneIA extends Phaser.Scene {
   }
 
   create(): void {
+
+    //console.info("create ", this.brain.generation, this.fitness());
+
     this.background = this.add
       .tileSprite(0, 0, 400, 600, "background")
       .setOrigin(0, 0);
@@ -126,29 +125,31 @@ export class GameSceneIA extends Phaser.Scene {
     
 
     this.pipes = this.add.group({ classType: Pipe });
-
-
     this.brain.sort();
 
-    // let newPopulation = [];
-    // for (var i:number=0; i < Math.abs(BIRD_AMOUNT * ELITISM_PERCENT) ; i++){
-    //   let genome = this.brain.population[i]; 
-    //   newPopulation.push(genome); 
-    // }
+    //Evolution equivalent to brain.evolve(); but this isn't have errors... -->
 
+    let newPopulation = [];
+    for (var i:number=0; i < Math.abs(BIRD_AMOUNT * ELITISM_PERCENT) ; i++){
+      let genome = this.brain.population[i]; 
+      newPopulation.push(genome); 
+    }
+    for (var i:number=0; i < (BIRD_AMOUNT - Math.abs(BIRD_AMOUNT * ELITISM_PERCENT)) ; i++){
+      let genome = this.brain.getOffspring();
+      newPopulation.push(genome); 
+    }
+    this.brain.population = newPopulation;
 
-    // for (var i:number=0; i < (BIRD_AMOUNT - Math.abs(BIRD_AMOUNT * ELITISM_PERCENT)) ; i++){
-    //   let genome = this.brain.getOffspring();
-    //   newPopulation.push(genome); 
-    // }
-
-
-    // this.brain.population = newPopulation;
+    //Evolution equivalent to brain.evolve(); but this isn't have errors...  <---
+    console.info("G1", this.brain.generation);
     this.brain.mutate();
-    this.brain.evolve();
+    console.info("G2", this.brain.generation);
     this.brain.generation++;
+    console.info("G3", this.brain.generation);
+    
 
     for (var i:number=0; i < BIRD_AMOUNT; i++){ 
+            
       this.birds.push(
         new BirdIA(this.brain.population[i], this, 50, 350, "bird")
       )
@@ -171,25 +172,31 @@ export class GameSceneIA extends Phaser.Scene {
     });
   }
 
+  fitness():number {
+    let fitness = 0;
+    if (this.birds != undefined){
+      this.birds.forEach(function(bird:BirdIA){
+        let birdFitness = bird.getFitness();
+        fitness += birdFitness;
+      });
+    }
+    return fitness;
+  }
+
   update(): void {
     let _this = this;
     this.background.tilePositionX += 4;
 
-    if (_this.nextTopPipe != this.firstTopPipe){
-      _this.changePipeDelay = 0;
-    }
-
-    if ( this.changePipeDelay == 0 ){
-      _this.firstTopPipe = _this.nextTopPipe;    
-      _this.firstBottomPipe = _this.nextBottomPipe;
-    }
-    else{
-      this.changePipeDelay -= 1;
-    }
 
 
     if (this.birdsAreAlive()) {
       this.birds.forEach(function(bird:BirdIA){
+
+        if ( bird.x  >=  _this.firstTopPipe.x + 10){
+          _this.firstTopPipe = _this.nextTopPipe;    
+          _this.firstBottomPipe = _this.nextBottomPipe;
+        }
+
         bird.update(_this.firstTopPipe, _this.firstBottomPipe);
         _this.physics.overlap(
             bird,
@@ -210,6 +217,7 @@ export class GameSceneIA extends Phaser.Scene {
       });
       this.birdsAliveText.setText(this.registry.values.birdsAlive);
     } 
+
     if (!this.birdsAreAlive()){
         Phaser.Actions.Call(
           this.pipes.getChildren(),
@@ -229,8 +237,26 @@ export class GameSceneIA extends Phaser.Scene {
 
   private printReport(){
 
-    let mygraph = this.brain.population[0].graph(300, 300);
-    this.graph.graphIt(mygraph);
+    //console.info("End life of generation " + this.brain.generation + " fitness " + this.fitness() + " hiFitness " + this.hiFitness);
+    let hiFitnessIndex = 0;
+    let updates = 0;
+    let _this = this;
+    if (this.birds != undefined){
+      let index = 0;
+      this.birds.forEach(function(bird:BirdIA){
+        let birdFitness = bird.getFitness();
+        if (_this.hiFitness < birdFitness){
+          _this.hiFitness = birdFitness;
+          hiFitnessIndex = index;
+          updates++;
+        }
+        index++;
+      });
+    }
+    if (updates > 0 ){
+      let mygraph = this.brain.population[hiFitnessIndex].graph(300, 300);
+      this.graph.graphIt(mygraph);
+    }
     
   }
 

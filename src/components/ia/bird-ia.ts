@@ -10,7 +10,11 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   }
 
   public setDead(dead: boolean): void {
+    if (this.isDead ){
+      return;
+    }
     this.isDead = dead;
+    this.fitness-=1;
     this.setVisible(false);
     this.setActive(false);
   }
@@ -107,8 +111,8 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
       return;
     }
 
-    let distanceToMiddleRatio = 1 + Math.abs( 1 / Math.abs(this.y - ( topPipe.y - ((topPipe.y - bottomPipe.y) / 2 ))) )
-    this.fitness += (distanceToMiddleRatio);
+    let distanceToMiddleRatio = Math.abs( 1 /  ( 1 + Math.abs(this.y - ( topPipe.y + ((topPipe.y - bottomPipe.y) / 2 )))) )
+    this.fitness +=  (distanceToMiddleRatio);
     this.brain.score +=  (distanceToMiddleRatio); 
    
 

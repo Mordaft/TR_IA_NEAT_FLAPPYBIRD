@@ -15,7 +15,8 @@ let GameConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 300 }
+      gravity: { y: 350 },
+      fps: 60
     }
   },
   render: { pixelArt: true }
@@ -32,7 +33,8 @@ let GameConfigIA: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 300 }
+      gravity: { y: 350 },
+      fps: 30
     }
   },
   render: { pixelArt: true }
