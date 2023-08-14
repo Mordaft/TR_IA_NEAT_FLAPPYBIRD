@@ -19,6 +19,9 @@ export const OUTPUTS_SIZE:number = 1;
 export const ELITISM_PERCENT:number = 0.15;
 
 
+/**
+ * Represents the game scene for the IA version of Flappy Bird.
+ */
 export class GameSceneIA extends Phaser.Scene { 
 
   private birds!: BirdIA[];
@@ -37,6 +40,10 @@ export class GameSceneIA extends Phaser.Scene {
   private graph: Graph;
 
 
+  /**
+   * Represents the game scene for the IA version of Flappy Bird.
+   * @constructor
+   */
   constructor() {
     
     super({
@@ -75,6 +82,10 @@ export class GameSceneIA extends Phaser.Scene {
 
   }
 
+  /**
+   * Initializes the game scene by setting the initial values for the score, number of birds alive, and generation.
+   * Also initializes the birds array.
+   */
   init(): void {
     this.registry.set("score", -1);
     this.registry.set("birdsAlive", -1);
@@ -83,6 +94,9 @@ export class GameSceneIA extends Phaser.Scene {
 
   }
 
+  /**
+   * Preloads the assets needed for the game.
+   */
   preload(): void {
     this.load.pack(
       "flappyBirdPack",
@@ -91,6 +105,11 @@ export class GameSceneIA extends Phaser.Scene {
     );
   }
 
+  /**
+   * Creates the game scene and initializes all the necessary components, including the background, score text, birds alive text, generation text, pipes, and birds. 
+   * Also sets up the evolution process for the neural network population and the timer for adding new rows of pipes.
+   * @returns void
+   */
   create(): void {
 
     //console.info("create ", this.brain.generation, this.fitness());
@@ -179,6 +198,10 @@ export class GameSceneIA extends Phaser.Scene {
     });
   }
 
+  /**
+   * Calculates the fitness of the birds in the game scene.
+   * @returns The total fitness of all birds in the game scene.
+   */
   fitness():number {
     let fitness = 0;
     if (this.birds != undefined){
@@ -190,6 +213,12 @@ export class GameSceneIA extends Phaser.Scene {
     return fitness;
   }
 
+  /**
+   * Updates the game scene. This method is called every frame while the scene is running.
+   * It updates the position of the background, the pipes, and the birds. It also checks for collisions
+   * between the birds and the pipes, and updates the score and generation information when necessary.
+   * If all birds are dead, it prints a report and restarts the scene.
+   */
   update(): void {
     let _this = this;
     this.background.tilePositionX += 4;
@@ -242,6 +271,10 @@ export class GameSceneIA extends Phaser.Scene {
     }
   }
 
+  /**
+   * Prints a report of the current generation's fitness and the highest fitness achieved so far.
+   * Also displays a graph of the neural network of the bird with the highest fitness.
+   */
   private printReport(){
 
     //console.info("End life of generation " + this.brain.generation + " fitness " + this.fitness() + " hiFitness " + this.hiFitness);
@@ -268,6 +301,10 @@ export class GameSceneIA extends Phaser.Scene {
   }
 
 
+  /**
+   * Checks if any birds are still alive in the game.
+   * @returns {boolean} True if at least one bird is alive, false otherwise.
+   */
   private birdsAreAlive():boolean{
     var alive: boolean = false;
     var numAlive: number = 0;
@@ -282,6 +319,11 @@ export class GameSceneIA extends Phaser.Scene {
     return alive;
   }
 
+  /**
+   * Adds a new row of pipes to the game scene and updates the score.
+   * Randomly picks a number between 1 and 5 to determine the position of the hole in the pipes.
+   * Adds 6 pipes with one big hole at position hole and hole + 1 and hole +2.
+   */
   private addNewRowOfPipes(): void {
     // update the score
     this.registry.values.score += 1;
@@ -308,6 +350,13 @@ export class GameSceneIA extends Phaser.Scene {
     }
   }
 
+  /**
+   * Adds a new pipe to the game scene at the specified position and frame.
+   * @param x The x-coordinate of the pipe's position.
+   * @param y The y-coordinate of the pipe's position.
+   * @param frame The frame number of the pipe's sprite.
+   * @returns The newly created Pipe object.
+   */
   private addPipe(x: number, y: number, frame: number): Pipe {
     // create a new pipe at the position x and y and add it to group
     let ret = new Pipe(this, x , y, "pipe", frame)
