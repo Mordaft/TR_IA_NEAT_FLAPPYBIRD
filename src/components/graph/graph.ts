@@ -1,14 +1,39 @@
+
 import * as vis from 'vis-network';
-
-
+/**
+ * A class representing a graph using the vis.js library.
+ */
 export class Graph { 
 
+    /**
+     * An array of nodes with their respective id and label.
+     */
     private nodesarr: { id: any; label: any; }[];
+
+    /**
+     * An array of edges with their respective source and target.
+     */
     private edgessarr: { from: any; to: any; }[];
+
+    /**
+     * The data object containing the nodes and edges arrays.
+     */
     private data: vis.Data;
+
+    /**
+     * The vis.js Network object.
+     */
     private network: vis.Network;
+
+    /**
+     * The HTML element that will contain the graph.
+     */
     private container:HTMLElement;
 
+    /**
+     * Creates a new Graph instance.
+     * @param divId The id of the HTML element that will contain the graph.
+     */
     constructor(divId :string){
 
         this.nodesarr = [];
@@ -26,8 +51,10 @@ export class Graph {
         this.network = new vis.Network(this.container, this.data , options);
     }
 
-
-
+    /**
+     * Updates the graph with new data.
+     * @param mygraph An object containing the nodes and edges arrays.
+     */
     public graphIt(mygraph: any){
         let _this = this;
         this.nodesarr = []    
@@ -58,6 +85,4 @@ export class Graph {
         this.network.setData(this.data);
     
       }
-
-
 }

@@ -2,22 +2,35 @@ import { Bird } from "./bird";
 import { Pipe } from "../common/pipe";
 
 
+/**
+ * Represents the game scene of the Flappy Bird game.
+ */
 export class GameScene extends Phaser.Scene {
   private bird!: Bird;
   private pipes!: Phaser.GameObjects.Group;
   private background!: Phaser.GameObjects.TileSprite;
   private scoreText!: Phaser.GameObjects.BitmapText;
 
+  /**
+   * Creates a new instance of the GameScene class.
+   * @constructor
+   */
   constructor() {
     super({
       key: "GameScene"
     });
   }
 
+  /**
+   * Initializes the game scene by setting the score to -1 in the registry.
+   */
   init(): void {
     this.registry.set("score", -1);
   }
 
+  /**
+   * Preloads the assets needed for the game.
+   */
   preload(): void {
     this.load.pack(
       "flappyBirdPack",
@@ -26,6 +39,10 @@ export class GameScene extends Phaser.Scene {
     );
   }
 
+  /**
+   * Creates the game scene, including the background, score text, pipes, and bird.
+   * Also sets up a timer to add new rows of pipes at a regular interval.
+   */
   create(): void {
     this.background = this.add
       .tileSprite(0, 0, 400, 600, "background")
@@ -57,6 +74,11 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  /**
+   * Updates the game scene on each frame.
+   * If the bird is not dead, updates the background, bird, and checks for collisions with pipes.
+   * If the bird is dead, stops the pipes and restarts the scene if the bird falls off the screen.
+   */
   update(): void {
     let _this = this;
     if (!this.bird.getDead()) {
@@ -89,6 +111,13 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Adds a new row of pipes to the game scene.
+   * Updates the score and displays it on the screen.
+   * Randomly picks a number between 1 and 5 to determine the position of the hole in the pipes.
+   * Adds 6 pipes with one big hole at position hole and hole + 1.
+   * @returns void
+   */
   private addNewRowOfPipes(): void {
     // update the score
     this.registry.values.score += 1;
@@ -111,6 +140,12 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Adds a new pipe to the game scene at the specified position.
+   * @param x The x-coordinate of the pipe's position.
+   * @param y The y-coordinate of the pipe's position.
+   * @param frame The frame number of the pipe's sprite.
+   */
   private addPipe(x: number, y: number, frame: number): void {
     // create a new pipe at the position x and y and add it to group
     this.pipes.add(
