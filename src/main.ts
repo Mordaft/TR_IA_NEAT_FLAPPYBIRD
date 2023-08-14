@@ -40,13 +40,31 @@ let GameConfigIA: Phaser.Types.Core.GameConfig = {
   render: { pixelArt: true }
 };
 
-
+function hideScreens(){
+  document?.querySelectorAll(".screen")?.forEach((screen) => {
+    screen.classList.add("ocu");
+  }); 
+}
 
 window.addEventListener("load", () => {
 
   let game = new Game(GameConfig);
-
   let gameia = new Game(GameConfigIA);
 
-});
+  
+  document?.querySelector("#humanlnk")?.addEventListener("click", () => {
+    hideScreens();
+    document?.querySelector("#game")?.classList.remove("ocu");
+    gameia.pause();
+    game.resume();
+  });
 
+  document?.querySelector("#ialnk")?.addEventListener("click", () => {
+    hideScreens();
+    document?.querySelector("#game-ia")?.classList.remove("ocu");
+    game.pause();
+    gameia.resume();
+  });
+
+
+});
