@@ -1,4 +1,11 @@
-import { Neat, methods, architect, Network } from "neataptic";
+/**
+ * @fileoverview This file contains the GameSceneIA class, which is responsible for managing the game scene for the Flappy Bird game with AI.
+ * It imports the Neat, methods, and architect modules from the neataptic library, as well as the Pipe and BirdIA classes from other files.
+ * It also defines several constants and variables, including the number of birds, mutation rate, input and output sizes, elitism percentage, and the brain.
+ * The GameSceneIA class extends the Phaser.Scene class and contains methods for initializing, preloading, creating, updating, and calculating fitness.
+ * It also contains a private graph variable for displaying the fitness graph.
+ */
+import { Neat, methods, architect } from "neataptic";
 import { Pipe } from "../common/pipe";
 import { BirdIA } from "./bird-ia";
 import { Graph } from "../graph/graph";

@@ -1,14 +1,25 @@
 import { Pipe } from "../common/pipe";
 
+/**
+ * Represents a bird controlled by an artificial neural network.
+ */
 export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   private isDead: boolean;
   private fitness!:number;
   private brain: any;
 
+  /**
+   * Gets whether the bird is dead or not.
+   * @returns A boolean indicating whether the bird is dead or not.
+   */
   public getDead(): boolean {
     return this.isDead;
   }
 
+  /**
+   * Sets whether the bird is dead or not.
+   * @param dead A boolean indicating whether the bird is dead or not.
+   */
   public setDead(dead: boolean): void {
     if (this.isDead ){
       return;
@@ -19,10 +30,17 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     this.setActive(false);
   }
 
+  /**
+   * Creates a new instance of BirdIA.
+   * @param genome The genome of the bird's neural network.
+   * @param scene The scene where the bird will be displayed.
+   * @param x The x coordinate of the bird's initial position.
+   * @param y The y coordinate of the bird's initial position.
+   * @param texture The texture key of the bird's sprite.
+   * @param frame The frame key of the bird's sprite.
+   */
   constructor(genome: any, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
     super(scene, x, y, texture, frame);
-
-    //console.info("BirdIA", genome);
 
     // sprite
     this.setScale(3);
@@ -30,7 +48,6 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
 
     // variables
     this.isDead = false;
-    //this.isFlapping = 0;
     this.fitness = 0;
 
     // physics
@@ -38,76 +55,38 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     this.setSize(17, 12);
     this.setGravityY(1000);
 
-    
-    // this.weightY = -7;
-    // this.weightTop = -2.3
-    // this.weightBottom = -5
-
-    // if (weightTop == null || weightTop == -1){
-    //   this.weightTop = Math.random()* - 120;
-    // }
-    // else {  
-    //   this.weightTop = Math.random()*30 - weightTop;
-    // }
-
-    // if (weightBottom == null || weightBottom == -1){
-    //   this.weightBottom = Math.random()*30;
-    // }
-    // else {  
-    //   this.weightBottom = Math.random()*5 + weightBottom;
-    // }
-    // if (weightY == null || weightY == -1){
-    //   this.weightY = Math.random()* - 30;
-    // }
-    // else {  
-    //   this.weightY = Math.random()*5 - weightY;
-    // }
-
     this.brain = genome;
     this.brain.score = 1;
     this.scene.add.existing(this);
   }
 
+  /**
+   * Determines whether the bird should flap its wings or not based on the input and the neural network's output.
+   * @param topPipe The top pipe of the gap the bird is trying to pass through.
+   * @param bottomPipe The bottom pipe of the gap the bird is trying to pass through.
+   * @returns A boolean indicating whether the bird should flap its wings or not.
+   */
   shouldIFlap(topPipe:Pipe, bottomPipe:Pipe): boolean{
 
     let input = {
                   myPositionY : this.y,
                   distanceToTopPipe: Math.abs(this.y - topPipe.y),
                   distanceToBottonPipe: Math.abs(this.y - (bottomPipe.y + 20)),
-                  //distanceXtoPipes: Math.abs(this.x - topPipe.x),
-                  //myVelocityY : this.body?.velocity,
               }
 
     let output = this.brain.activate(input);
 
-    //console.info(input, output);
     return output[0];
-
-    // let addition = (this.y * this.weightY) + ((topPipe.y-this.y) * this.weightTop) + ((bottomPipe.y-this.y) * this.weightBottom) + this.BIAS;
-    // let formula =  Math.tanh(addition) ; 
-    
-    //console.info(formula, addition, this.y, this.weightY, this.weightTop, this.weightBottom, this.BIAS );
-
-    // if (formula < 0.5 ){
-    //   return true;
-    // }
-    // return false;
-    
-    // let value = false;
-    // //let passBotton = (this.y > (bottomPipe + 90 ));
-    // let passTop =  (this.y < (topPipe.y + 30 + this.weightTop))
-    // let passBotton =  (this.y < (bottomPipe.y - 30 - this.weightBottom ))
-    // if (!passTop || !passBotton) {
-    //   value = true;
-    // }
-    // return value;
   }
   
-  
+  /**
+   * Updates the bird's fitness, angle, and velocity based on the input and the neural network's output.
+   * @param topPipe The top pipe of the gap the bird is trying to pass through.
+   * @param bottomPipe The bottom pipe of the gap the bird is trying to pass through.
+   */
   update(topPipe:Pipe , bottomPipe:Pipe ): void {
     // Every tick fitness grow:
     if (this.isDead ){
-      //console.info(this.brain , this.brain.score);
       return;
     }
 
@@ -124,7 +103,6 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     // handle input
     if (this.shouldIFlap(topPipe, bottomPipe)) {
       // flap
-      //this.isFlapping = 1;
       this.setVelocityY(-350);
       this.scene.tweens.add({
         targets: this,
@@ -133,9 +111,6 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
         ease: "Power0"
       });
     } 
-    //else if (this.isFlapping > 0) {
-    //  this.isFlapping -=1;
-    //}
 
     // check if off the screen
     if (this.y + this.height > this.scene.sys.canvas.height) {
@@ -143,10 +118,18 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  /**
+   * Gets the fitness of the bird.
+   * @returns The fitness of the bird.
+   */
   public getFitness():number{
     return this.fitness;
   }
 
+  /**
+   * Returns an object containing the bird's neural network.
+   * @returns An object containing the bird's neural network.
+   */
   print(): object{
     let me = 
     {
