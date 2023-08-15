@@ -18,12 +18,21 @@ h1 {
     border: 1px solid lightgray;
 }
 
+.grid-container {
+  display: grid;
+}
+
 .ocu {
   display: none;
 }
 
+.row {
+  flex-direction: row;
+  align-items: center;
+}
+
 .menu-bar {
-  border-radius: 25px;
+  border-radius: 5px;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   display: inline-flex;
@@ -37,7 +46,7 @@ h1 {
   color: white;
   font-family: sans-serif;
   font-weight: bold;
-  padding: 12px 16px;
+  padding: 12px 32px;
   margin: 0 8px;
   position: relative;
   cursor: pointer;
@@ -52,7 +61,7 @@ h1 {
   width: 100%;
   z-index: -1;
   transition: 0.2s;
-  border-radius: 25px;
+  border-radius: 5px;
 }
 .menu-bar li:hover {
   color: black;

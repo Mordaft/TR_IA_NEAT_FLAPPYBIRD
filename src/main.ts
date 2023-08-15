@@ -34,7 +34,7 @@ let GameConfigIA: Phaser.Types.Core.GameConfig = {
     default: "arcade",
     arcade: {
       gravity: { y: 350 },
-      fps: 30
+      fps: 60
     }
   },
   render: { pixelArt: true }
@@ -50,6 +50,8 @@ window.addEventListener("load", () => {
 
   let game = new Game(GameConfig);
   let gameia = new Game(GameConfigIA);
+  gameia.pause();
+  game.pause();
 
   
   document?.querySelector("#humanlnk")?.addEventListener("click", () => {
