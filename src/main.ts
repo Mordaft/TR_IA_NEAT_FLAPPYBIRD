@@ -69,4 +69,22 @@ window.addEventListener("load", () => {
   });
 
 
+  document?.querySelector("#documentationlnk")?.addEventListener("click", () => {
+    hideScreens();
+    gameia.pause();
+    game.pause();
+    document?.querySelector("#documentation")?.classList.remove("ocu");
+  
+  });
+
+  document?.querySelector("#statslnk")?.addEventListener("click", () => {
+    hideScreens();
+    gameia.pause();
+    game.pause();
+    document?.querySelector("#stats")?.classList.remove("ocu");
+  
+  });
+
+
+
 });
