@@ -62,6 +62,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
 
   /**
    * Determines whether the bird should flap its wings or not based on the input and the neural network's output.
+   * Fact: the IA response should be similar to (this.y > bottomPipe.y - 90)
    * @param topPipe The top pipe of the gap the bird is trying to pass through.
    * @param bottomPipe The bottom pipe of the gap the bird is trying to pass through.
    * @returns A boolean indicating whether the bird should flap its wings or not.
@@ -76,7 +77,8 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
 
     let output = this.brain.activate(input);
 
-    return output[0];
+ 
+    return (output[0] > 0.5);
   }
   
   /**

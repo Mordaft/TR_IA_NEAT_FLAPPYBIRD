@@ -5,18 +5,18 @@
  * The GameSceneIA class extends the Phaser.Scene class and contains methods for initializing, preloading, creating, updating, and calculating fitness.
  * It also contains a private graph variable for displaying the fitness graph.
  */
-import { Neat, methods, architect } from "neataptic";
+import { Neat, methods, architect, Network } from "neataptic";
 import { Pipe } from "../common/pipe";
 import { BirdIA } from "./bird-ia";
 import { Graph } from "../graph/graph";
 
 
-export const BIRD_AMOUNT:number = 100;
-export const MUTATION_RATE:number = 0.25;
-export const START_HIDDEN_SIZE:number = 1;
+export const BIRD_AMOUNT:number = 10;
+export const MUTATION_RATE:number = 0.4;
+export const START_HIDDEN_SIZE:number = 4;
 export const INPUTS_SIZE:number = 3;
 export const OUTPUTS_SIZE:number = 1;
-export const ELITISM_PERCENT:number = 0.15;
+export const ELITISM_PERCENT:number = 0.2;
 
 
 /**
@@ -56,7 +56,9 @@ export class GameSceneIA extends Phaser.Scene {
 
     this.hiScore = 0;
 
-    this.brain = new Neat(5, 1 , _this.fitness(), {
+    let network: Network = architect.Perceptron(INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE);
+
+    this.brain = new Neat(INPUTS_SIZE , OUTPUTS_SIZE , _this.fitness(), {
         mutation: [
           methods.mutation.ADD_NODE,
           methods.mutation.SUB_NODE,
@@ -65,17 +67,19 @@ export class GameSceneIA extends Phaser.Scene {
           methods.mutation.MOD_WEIGHT,
           methods.mutation.MOD_BIAS,
           methods.mutation.MOD_ACTIVATION,
-          methods.mutation.ADD_GATE,
-          methods.mutation.SUB_GATE,
-          methods.mutation.ADD_SELF_CONN,
-          methods.mutation.SUB_SELF_CONN,
-          methods.mutation.ADD_BACK_CONN,
-          methods.mutation.SUB_BACK_CONN
+         methods.mutation.ADD_GATE,
+         methods.mutation.SUB_GATE,
+         methods.mutation.ADD_SELF_CONN,
+         methods.mutation.SUB_SELF_CONN,
+         methods.mutation.ADD_BACK_CONN,
+         methods.mutation.SUB_BACK_CONN
         ],
         popsize: BIRD_AMOUNT,
         mutationRate: MUTATION_RATE,
         elitism: Math.round(ELITISM_PERCENT * BIRD_AMOUNT),
-        network: architect.Random( INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE , null)
+        //network: architect.Random( INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE , null)
+        network: network,
+        equal: true
       }
     )
       
@@ -167,12 +171,8 @@ export class GameSceneIA extends Phaser.Scene {
     this.brain.population = newPopulation;
 
     //Evolution equivalent to brain.evolve(); but this isn't have errors...  <---
-    console.info("G1", this.brain.generation);
     this.brain.mutate();
-    console.info("G2", this.brain.generation);
-    this.brain.generation++;
-    console.info("G3", this.brain.generation);
-    
+    this.brain.generation++;    
 
     for (var i:number=0; i < BIRD_AMOUNT; i++){ 
             
@@ -228,7 +228,7 @@ export class GameSceneIA extends Phaser.Scene {
     if (this.birdsAreAlive()) {
       this.birds.forEach(function(bird:BirdIA){
 
-        if ( bird.x  >=  _this.firstTopPipe.x + 10){
+        if ( bird.x  >=  _this.firstTopPipe.x + 60){
           _this.firstTopPipe = _this.nextTopPipe;    
           _this.firstBottomPipe = _this.nextBottomPipe;
         }

@@ -46,7 +46,9 @@ export class Graph {
         var options = {
           nodes: {
             shape: "dot"
-          }
+          },
+          width: "400px",
+          height: "400px"
         };
         this.network = new vis.Network(this.container, this.data , options);
     }
