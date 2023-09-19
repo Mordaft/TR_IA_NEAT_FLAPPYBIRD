@@ -7,15 +7,9 @@ body {
   justify-content: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 #graph {
-    width: 500px;
-    height: 600px;
     border: 1px solid lightgray;
+    width: 100%;
 }
 
 .grid-container {
@@ -27,19 +21,17 @@ h1 {
 }
 
 .row {
-  flex-direction: row;
   align-items: center;
 }
 
 .menu-bar {
   border-radius: 5px;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
   display: inline-flex;
   background-color: rgba(0, 0, 0, 0.4);
   align-items: center;
   padding: 0 10px;
-  margin: 50px 0 0 0;
+  margin: 10px 0 0 0;
+  width: 100%;
 }
 .menu-bar li {
   list-style: none;
@@ -65,9 +57,4 @@ h1 {
 }
 .menu-bar li:hover {
   color: black;
-}
-.menu-bar li:hover::before {
-  background: linear-gradient(to bottom, #e8edec, #d2d1d3);
-  box-shadow: 0px 3px 20px 0px black;
-  transform: scale(1.2);
 }

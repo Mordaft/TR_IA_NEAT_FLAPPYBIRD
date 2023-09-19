@@ -152,4 +152,5 @@ export class GameScene extends Phaser.Scene {
       new Pipe(this, x , y, "pipe", frame)
     );
   }
+
 }

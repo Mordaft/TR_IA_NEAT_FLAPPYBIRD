@@ -294,7 +294,7 @@ export class GameSceneIA extends Phaser.Scene {
       });
     }
     if (updates > 0 ){
-      let mygraph = this.brain.population[hiFitnessIndex].graph(300, 300);
+      let mygraph = this.brain.population[hiFitnessIndex].graph(1200, 600);
       this.graph.graphIt(mygraph);
     }
     
@@ -363,4 +363,5 @@ export class GameSceneIA extends Phaser.Scene {
     this.pipes.add(ret);  
     return ret;
   }
+
 }

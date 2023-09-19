@@ -52,7 +52,6 @@ window.addEventListener("load", () => {
   let gameia = new Game(GameConfigIA);
   gameia.pause();
   game.pause();
-
   
   document?.querySelector("#humanlnk")?.addEventListener("click", () => {
     hideScreens();

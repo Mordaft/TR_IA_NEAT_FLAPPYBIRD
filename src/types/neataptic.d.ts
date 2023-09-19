@@ -48,7 +48,7 @@ declare module 'neataptic' {
     }
 
     export class Neat {
-        population: any[];
+        population: Network[];
         generation: any;
         constructor(input: any, output: any, fitness: any, options: any);
 

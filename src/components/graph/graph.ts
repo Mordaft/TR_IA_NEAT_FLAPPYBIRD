@@ -44,13 +44,36 @@ export class Graph {
         }
         this.container = document.getElementById(divId) as HTMLElement;
         var options = {
+          //physics:{enabled:false},
+          layout:{ 
+            improvedLayout:true, 
+            //hierarchical:{ enabled:true}
+            //hierarchical:{ enabled:false, levelSeparation: 150, direction: 'UD', sortMethod: 'hubsize'}
+          } ,
           nodes: {
             shape: "dot"
           },
-          width: "400px",
+          width: "800px",
           height: "400px"
         };
         this.network = new vis.Network(this.container, this.data , options);
+        window.addEventListener("resize", () => {
+          if ( this.network != undefined ){
+            console.info("repaint");
+            this.network.fit();
+            this.network.redraw();
+          }
+        }
+        );
+
+        document?.querySelector("#statslnk")?.addEventListener("click", () => {
+          if ( this.network != undefined ){
+            console.info("repaint");
+            this.network.fit();
+            this.network.redraw();
+          }       
+        });
+      
     }
 
     /**
@@ -85,6 +108,6 @@ export class Graph {
         }
         
         this.network.setData(this.data);
-    
       }
+
 }
