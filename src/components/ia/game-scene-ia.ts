@@ -56,6 +56,8 @@ export class GameSceneIA extends Phaser.Scene {
 
     this.hiScore = 0;
 
+    //Variaciones probadas de redes neuronales..
+    //let network: Network = architect.Random( INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE , null)
     let network: Network = architect.Perceptron(INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE);
 
     this.brain = new Neat(INPUTS_SIZE , OUTPUTS_SIZE , _this.fitness(), {
@@ -67,17 +69,16 @@ export class GameSceneIA extends Phaser.Scene {
           methods.mutation.MOD_WEIGHT,
           methods.mutation.MOD_BIAS,
           methods.mutation.MOD_ACTIVATION,
-         methods.mutation.ADD_GATE,
-         methods.mutation.SUB_GATE,
-         methods.mutation.ADD_SELF_CONN,
-         methods.mutation.SUB_SELF_CONN,
-         methods.mutation.ADD_BACK_CONN,
-         methods.mutation.SUB_BACK_CONN
+          methods.mutation.ADD_GATE,
+          methods.mutation.SUB_GATE,
+          methods.mutation.ADD_SELF_CONN,
+          methods.mutation.SUB_SELF_CONN,
+          methods.mutation.ADD_BACK_CONN,
+          methods.mutation.SUB_BACK_CONN
         ],
         popsize: BIRD_AMOUNT,
         mutationRate: MUTATION_RATE,
         elitism: Math.round(ELITISM_PERCENT * BIRD_AMOUNT),
-        //network: architect.Random( INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE , null)
         network: network,
         equal: true
       }

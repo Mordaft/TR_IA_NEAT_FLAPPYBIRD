@@ -43,13 +43,26 @@ export class Graph {
             edges: []
         }
         this.container = document.getElementById(divId) as HTMLElement;
-        var options = {
-          //physics:{enabled:false},
-          layout:{ 
-            improvedLayout:true, 
-            //hierarchical:{ enabled:true}
-            //hierarchical:{ enabled:false, levelSeparation: 150, direction: 'UD', sortMethod: 'hubsize'}
-          } ,
+        var options = 
+        {
+          layout: {
+            improvedLayout:true,
+            hierarchical: {
+              sortMethod: 'directed',
+              shakeTowards: 'roots',
+              direction: 'LR',        // UD, DU, LR, RL
+//              blockShifting: true,
+              edgeMinimization: true,
+//              parentCentralization: true,
+              levelSeparation: 100,
+              nodeSpacing: 100
+
+            },
+
+          },
+          edges: {
+            arrows: { to: true },
+          },
           nodes: {
             shape: "dot"
           },
@@ -106,8 +119,9 @@ export class Graph {
           nodes: this.nodesarr,
           edges: this.edgessarr
         }
-        
         this.network.setData(this.data);
+        this.network.fit();
+        console.info('Graph data', this.data);
       }
 
 }

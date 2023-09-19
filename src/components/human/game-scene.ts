@@ -51,9 +51,10 @@ export class GameScene extends Phaser.Scene {
     this.scoreText = this.add
       .bitmapText(
         this.sys.canvas.width / 2 - 14,
-        30,
-        "font",
-        this.registry.values.score
+        32,
+        "atari",
+        this.registry.values.score,
+        28
       )
       .setDepth(2);
 
