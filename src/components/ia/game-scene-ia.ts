@@ -63,7 +63,7 @@ export class GameSceneIA extends Phaser.Scene {
     this.brain = new Neat(INPUTS_SIZE , OUTPUTS_SIZE , _this.fitness(), {
         mutation: [
           methods.mutation.ADD_NODE,
-          methods.mutation.SUB_NODE,
+          //methods.mutation.SUB_NODE,
           methods.mutation.ADD_CONN,
           methods.mutation.SUB_CONN,
           methods.mutation.MOD_WEIGHT,
@@ -71,10 +71,10 @@ export class GameSceneIA extends Phaser.Scene {
           methods.mutation.MOD_ACTIVATION,
           methods.mutation.ADD_GATE,
           methods.mutation.SUB_GATE,
-          methods.mutation.ADD_SELF_CONN,
-          methods.mutation.SUB_SELF_CONN,
-          methods.mutation.ADD_BACK_CONN,
-          methods.mutation.SUB_BACK_CONN
+          //methods.mutation.ADD_SELF_CONN,
+          //methods.mutation.SUB_SELF_CONN,
+          //methods.mutation.ADD_BACK_CONN,
+          //methods.mutation.SUB_BACK_CONN
         ],
         popsize: BIRD_AMOUNT,
         mutationRate: MUTATION_RATE,
@@ -105,7 +105,7 @@ export class GameSceneIA extends Phaser.Scene {
   preload(): void {
     this.load.pack(
       "flappyBirdPack",
-      "./src/assets/pack.json",
+      "/pack.json",
       "flappyBirdPack"
     );
   }
