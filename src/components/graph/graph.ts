@@ -50,42 +50,43 @@ export class Graph {
             hierarchical: {
               sortMethod: 'directed',
               shakeTowards: 'roots',
-              direction: 'LR',        // UD, DU, LR, RL
+              direction: 'UD',        // UD, DU, LR, RL
 //              blockShifting: true,
-              edgeMinimization: true,
-//              parentCentralization: true,
-              levelSeparation: 100,
-              nodeSpacing: 100
+//              edgeMinimization: true,
+              parentCentralization: true,
+//              levelSeparation: 60,
+//              nodeSpacing: 60
 
             },
 
           },
+          physics: {
+            enabled: false,
+            hierarchicalRepulsion: {
+              "centralGravity": 0
+            },
+            "minVelocity": 0.75,
+            "solver": "hierarchicalRepulsion"
+          },
           edges: {
             arrows: { to: true },
+            scaling: {
+              max: 6
+            },
+            selfReference: {
+              angle: 0.7853981633974483
+            },
+            smooth: false
           },
           nodes: {
             shape: "dot"
           },
-          width: "800px",
-          height: "400px"
+          width: "400px",
+          height: "600px"
         };
+        
         this.network = new vis.Network(this.container, this.data , options);
-        window.addEventListener("resize", () => {
-          if ( this.network != undefined ){
-            console.info("repaint");
-            this.network.fit();
-            this.network.redraw();
-          }
-        }
-        );
-
-        document?.querySelector("#statslnk")?.addEventListener("click", () => {
-          if ( this.network != undefined ){
-            console.info("repaint");
-            this.network.fit();
-            this.network.redraw();
-          }       
-        });
+      
       
     }
 
@@ -100,7 +101,7 @@ export class Graph {
         mynodes.forEach(function(mynode: { id: any; name: any; }){
           let node = {
             id: mynode.id,
-            label: mynode.name
+            label: mynode.name 
           }
           _this.nodesarr.push(node);
         })
@@ -121,6 +122,7 @@ export class Graph {
         }
         this.network.setData(this.data);
         this.network.fit();
+        this.network.redraw();
         console.info('Graph data', this.data);
       }
 

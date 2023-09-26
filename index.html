@@ -8,34 +8,45 @@
 </head>
 
 <body>
-  <div class="">
-    <div id="title" class="row">
-      <h1>TR : Apredizaje automático utilizando NEAT en el juego Flappybirds</h1>
-    </div>    
-    <div id="menu" class="row">
-      <ul class="menu-bar">
-        <li id="documentationlnk">Documentation</li>
-        <li><a id="humanlnk">Human Flappy Bird</a></li>
-        <li><a id="ialnk">IA Flappy Bird</a></li>
-        <li><a id="statslnk">Statistics</a></li>
-      </ul>
-    </div>
-    <div id="screens" class="row">
-      <div class="ocu row screen" id="documentation">
-        <h2>Documentation</h2>
-      </div>
-      <div class="ocu row screen" id="game">
+  <div id="title" class="header">
+    TR : Apredizaje automático utilizando NEAT en el juego Flappybirds
+  </div>    
+  <div id="menu">
+    <ul class="menu-bar">
+      <li><a id="humanlnk">Human Flappy Bird</a></li>
+      <li><a id="ialnk">IA Flappy Bird</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+
+
+    <div class="ocu screen" id="screen-game">
+      <div class="td">
         <h2>Flappybird Human</h2>
-      </div>
-      <div class="ocu row screen" id="game-ia">
+        <div id="game"></div>  
+      </div>  
+    </div>
+
+    <div class="ocu screen " id="screen-game-ia">
+      <div class="td">
         <h2>Flappybird IA</h2>
+        <div id="game-ia"></div>  
       </div>
-      <div class="ocu row screen" id="stats">
+      <div class="td">
+        <br>
+      </div>
+      <div class="td">
         <h2>Neural Network</h2>
-        <div id="graph"></div>        
+        <div id="graph"></div>  
       </div>
     </div>
-  
+    
+  </div>
+
+
+  <div class="footer">
+    Created by Javier Cabezas Fortuny
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>

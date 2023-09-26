@@ -25,7 +25,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
       return;
     }
     this.isDead = dead;
-    this.fitness-=1;
+    //this.fitness-=1;
     this.setVisible(false);
     this.setActive(false);
   }
@@ -92,9 +92,9 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
       return;
     }
 
-    let distanceToMiddleRatio = Math.abs( 1 /  ( 1 + Math.abs(this.y - ( topPipe.y + ((topPipe.y - bottomPipe.y) / 2 )))) )
-    this.fitness +=  (distanceToMiddleRatio);
-    this.brain.score +=  (distanceToMiddleRatio); 
+    //let distanceToMiddleRatio = Math.abs( 1 /  ( 1 + Math.abs(this.y - ( topPipe.y + ((topPipe.y - bottomPipe.y) / 2 )))) )
+    this.fitness +=  1;
+    this.brain.score +=  1; 
    
 
     // handle angle change
@@ -120,11 +120,13 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  
+
   /**
-   * Gets the fitness of the bird.
+   * Gets the fitness of the complete population
    * @returns The fitness of the bird.
    */
-  public getFitness():number{
+  getFitness():number{
     return this.fitness;
   }
 

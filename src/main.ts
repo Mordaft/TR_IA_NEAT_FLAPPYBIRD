@@ -55,14 +55,14 @@ window.addEventListener("load", () => {
   
   document?.querySelector("#humanlnk")?.addEventListener("click", () => {
     hideScreens();
-    document?.querySelector("#game")?.classList.remove("ocu");
+    document?.querySelector("#screen-game")?.classList.remove("ocu");
     gameia.pause();
     game.resume();
   });
 
   document?.querySelector("#ialnk")?.addEventListener("click", () => {
     hideScreens();
-    document?.querySelector("#game-ia")?.classList.remove("ocu");
+    document?.querySelector("#screen-game-ia")?.classList.remove("ocu");
     game.pause();
     gameia.resume();
   });

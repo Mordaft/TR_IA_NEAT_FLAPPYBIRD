@@ -83,7 +83,7 @@ export class GameScene extends Phaser.Scene {
   update(): void {
     let _this = this;
     if (!this.bird.getDead()) {
-      this.background.tilePositionX += 4;
+      this.background.tilePositionX += 2;
       this.bird.update();
       this.physics.overlap(
         this.bird,

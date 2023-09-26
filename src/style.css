@@ -1,43 +1,31 @@
-
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito&family=Sedgwick+Ave+Display&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
 body {
-  height: 100vh;
   margin: 0;
-  display: flex;
-  justify-content: center;
+  padding: 0;
+  border: 0;
+  color: rgba(0, 100, 66, 1);
+  /* font-family: 'Sedgwick Ave Display', cursive; */
+  font-family: 'Nunito', sans-serif;
 }
 
-#graph {
-    border: 1px solid lightgray;
-    width: 100%;
-}
-
-.grid-container {
-  display: grid;
-}
-
-.ocu {
-  display: none;
-}
-
-.row {
-  align-items: center;
+h1 {
+  margin-bottom: 20px;
 }
 
 .menu-bar {
   border-radius: 5px;
   display: inline-flex;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 100, 66, 1);
   align-items: center;
   padding: 0 10px;
   margin: 10px 0 0 0;
-  width: 100%;
+  width: 90%;
 }
 .menu-bar li {
   list-style: none;
   color: white;
-  font-family: sans-serif;
-  font-weight: bold;
   padding: 12px 32px;
   margin: 0 8px;
   position: relative;
@@ -57,4 +45,45 @@ body {
 }
 .menu-bar li:hover {
   color: black;
+}
+
+
+div {
+  display: flex;
+  justify-content: center;
+}
+
+div {
+
+  #graph {
+      border: 1px solid lightgray;
+      width: 100%;
+  }
+
+  .ocu {
+    display: none;
+  } 
+}
+
+div.table {display: table; }
+div.tr {display: table-row; }
+div.td {display: table-cell; padding-left: 20px; }
+
+.footer {
+  padding: 10px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: rgba(0, 100, 66, 1);
+  background-color: white;
+  text-align: center;
+  }
+
+.header {
+  padding: 10px;
+  text-align: center;
+  color: rgba(0, 100, 66, 1);
+  background-color: white;
+  font-size: 36px;
 }
