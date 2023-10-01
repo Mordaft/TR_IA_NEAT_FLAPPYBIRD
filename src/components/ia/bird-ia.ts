@@ -1,5 +1,6 @@
+import { Network } from "neataptic";
 import { Pipe } from "../common/pipe";
-import { BLOCK_SIZE } from "./brain";
+import { PIPE_BLOCK_SIZE } from "./game-scene-ia";
 
 /**
  * Represents a bird controlled by an artificial neural network.
@@ -7,7 +8,8 @@ import { BLOCK_SIZE } from "./brain";
 export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   private isDead: boolean;
   private fitness!:number;
-  private brain: any;
+  private brain: Network;
+  private populationIndex: number;
 
   /**
    * Gets whether the bird is dead or not.
@@ -40,7 +42,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
    * @param texture The texture key of the bird's sprite.
    * @param frame The frame key of the bird's sprite.
    */
-  constructor(genome: any, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
+  constructor(index: number, genome: Network, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
     super(scene, x, y, texture, frame);
 
     // sprite
@@ -56,8 +58,8 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     this.setSize(17, 12);
     this.setGravityY(1000);
 
+    this.populationIndex = index;
     this.brain = genome;
-    this.brain.score = 1;
     this.scene.add.existing(this);
   }
 
@@ -71,9 +73,9 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   shouldIFlap(topPipe:Pipe, bottomPipe:Pipe): boolean{
 
     
-    let base10y = Math.round( this.y / BLOCK_SIZE);
-    let base10topPipeY = Math.round( topPipe.y / BLOCK_SIZE);
-    let base10bottomPipeY = Math.round( bottomPipe.y / BLOCK_SIZE);
+    let base10y = Math.round( Math.abs(this.y) / PIPE_BLOCK_SIZE);
+    let base10topPipeY = (Math.round( Math.abs(topPipe.y) / PIPE_BLOCK_SIZE) + 2);
+    let base10bottomPipeY = ( Math.round( Math.abs(bottomPipe.y) / PIPE_BLOCK_SIZE));
 
     let input = {
                   myPositionY : base10y,
@@ -82,9 +84,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
               }
     if (isNaN(base10y)) return false;
     
-    let output = this.brain.activate(input);
-    //console.log('shouldIFlap', input, Math.round(Math.abs(output[0]))==1);          
- 
+    let output = this.brain.activate(input, { trace: false });
+    // if (this.populationIndex == 0){
+    //   console.log('shouldIFlap', input, Math.round(Math.abs(output[0]))==1);          
+    // }
     return Math.round(Math.abs(output[0]))==1;
     
   }
@@ -102,8 +105,6 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
 
     //let distanceToMiddleRatio = Math.abs( 1 /  ( 1 + Math.abs(this.y - ( topPipe.y + ((topPipe.y - bottomPipe.y) / 2 )))) )
     this.fitness +=  1;
-    this.brain.score +=  1; 
-   
 
     // handle angle change
     if (this.angle < 30) {

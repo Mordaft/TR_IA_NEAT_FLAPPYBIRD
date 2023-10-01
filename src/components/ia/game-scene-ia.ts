@@ -11,12 +11,7 @@ import { Graph } from "../graph/graph";
 import { Brain } from "./brain";
 
 
-export const BIRD_AMOUNT: number = 10;
-export const MUTATION_RATE: number = 0.4;
-export const START_HIDDEN_SIZE: number = 4;
-export const INPUTS_SIZE: number = 3;
-export const OUTPUTS_SIZE: number = 1;
-export const ELITISM_PERCENT: number = 0.2;
+export const BIRD_AMOUNT: number = 30;
 export const PIPE_BLOCK_SIZE: number = 60;
 
 /**
@@ -50,7 +45,7 @@ export class GameSceneIA extends Phaser.Scene {
     });
     this.hiFitness = 0;
 
-    this.brain = new Brain(this.fitness());
+    this.brain = new Brain(this.fitness, BIRD_AMOUNT);
 
     this.graph = new Graph("graph");
 
@@ -130,7 +125,7 @@ export class GameSceneIA extends Phaser.Scene {
     let population = this.brain.getPopulation();
     for (var i: number = 0; i < BIRD_AMOUNT; i++) {
       this.birds.push(
-        new BirdIA(population[i], this, 50, 350, "bird")
+        new BirdIA(i, population[i], this, 50, 350, "bird")
       )
     }
 
@@ -219,10 +214,10 @@ export class GameSceneIA extends Phaser.Scene {
         this
       );
       _this.printReport();
-      this.brain.createPopulation();
-      let generation = this.brain.getGeneration();  
-      this.registry.values.generation = generation.toString();
-      this.generationText.setText(this.registry.values.generation);
+      // this.brain.createPopulation();
+      // let generation = this.brain.getGeneration();  
+      // this.registry.values.generation = generation.toString();
+      // this.generationText.setText(this.registry.values.generation);
       _this.scene.restart();
     }
   }
