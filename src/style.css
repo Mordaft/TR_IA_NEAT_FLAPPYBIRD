@@ -78,6 +78,7 @@ div.td {display: table-cell; padding-left: 20px; }
   color: rgba(0, 100, 66, 1);
   background-color: white;
   text-align: center;
+  font-size: 36px;
   }
 
 .header {

@@ -1,4 +1,5 @@
 import { Pipe } from "../common/pipe";
+import { BLOCK_SIZE } from "./brain";
 
 /**
  * Represents a bird controlled by an artificial neural network.
@@ -69,16 +70,23 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
    */
   shouldIFlap(topPipe:Pipe, bottomPipe:Pipe): boolean{
 
+    
+    let base10y = Math.round( this.y / BLOCK_SIZE);
+    let base10topPipeY = Math.round( topPipe.y / BLOCK_SIZE);
+    let base10bottomPipeY = Math.round( bottomPipe.y / BLOCK_SIZE);
+
     let input = {
-                  myPositionY : this.y,
-                  distanceToTopPipe: Math.abs(this.y - topPipe.y),
-                  distanceToBottonPipe: Math.abs(this.y - (bottomPipe.y + 20)),
+                  myPositionY : base10y,
+                  topPipeY: base10topPipeY,
+                  bottonPipeY: base10bottomPipeY,
               }
-
+    if (isNaN(base10y)) return false;
+    
     let output = this.brain.activate(input);
-
+    //console.log('shouldIFlap', input, Math.round(Math.abs(output[0]))==1);          
  
-    return (output[0] > 0.5);
+    return Math.round(Math.abs(output[0]))==1;
+    
   }
   
   /**

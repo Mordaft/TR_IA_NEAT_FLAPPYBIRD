@@ -3,7 +3,7 @@ export class Pipe extends Phaser.Physics.Arcade.Image {
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number) {
     super(scene, x, y, texture, frame);
 
-    // image
+    // escale de imagen es 3, como son 20 pixeles de ancho y 20 de alto asi que equivalen a 60 pixeles
     this.setScale(3);
     this.setOrigin(0, 0);
 

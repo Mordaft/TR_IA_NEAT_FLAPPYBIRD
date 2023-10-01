@@ -17,7 +17,7 @@ export const START_HIDDEN_SIZE: number = 4;
 export const INPUTS_SIZE: number = 3;
 export const OUTPUTS_SIZE: number = 1;
 export const ELITISM_PERCENT: number = 0.2;
-
+export const PIPE_BLOCK_SIZE: number = 60;
 
 /**
  * Represents the game scene for the IA version of Flappy Bird.
@@ -234,28 +234,28 @@ export class GameSceneIA extends Phaser.Scene {
   private printReport() {
 
     //console.info("End life of generation " + this.brain.generation + " fitness " + this.fitness() + " hiFitness " + this.hiFitness);
-    let hiFitness = -1;
+    let _this = this;
     let hiFitnessIndex = -1;
-    let index = -1;
+    let index = 0;
     if (this.birds != undefined) {
       let birdFitness = 0;
       this.birds.forEach(function (bird: BirdIA) {
         birdFitness = bird.getFitness();
-        if (hiFitness < birdFitness) {
-          hiFitness = birdFitness;
+        // console.info("Bird fitnes" , birdFitness, _this.hiFitness, hiFitnessIndex, index);
+        if (_this.hiFitness < birdFitness) {
+          _this.hiFitness = birdFitness;
           hiFitnessIndex = index;
         }
         index++;
       });
     }
 
-    if (-1 < hiFitnessIndex ) {
-      console.info('printReport population fitness', this.fitness());
+    
+    if (hiFitnessIndex >= 0) {
+      console.info('printReport population fitness', this.hiFitness, hiFitnessIndex);
       let mygraph = this.brain.getGraph(hiFitnessIndex);
       this.graph.graphIt(mygraph);
     }
-
-    
 
   }
 
@@ -299,11 +299,11 @@ export class GameSceneIA extends Phaser.Scene {
     for (let i = 0; i < 10; i++) {
       if (i !== hole && i !== hole + 1 && i !== hole + 2) {
         if (i === hole - 1) {
-          this.nextTopPipe = this.addPipe(400, i * 60, 0);
+          this.nextTopPipe = this.addPipe(400, i * PIPE_BLOCK_SIZE, 0);
         } else if (i === hole + 3) {
-          this.nextBottomPipe = this.addPipe(400, i * 60, 1);
+          this.nextBottomPipe = this.addPipe(400, i * PIPE_BLOCK_SIZE, 1);
         } else {
-          this.addPipe(400, i * 60, 2);
+          this.addPipe(400, i * PIPE_BLOCK_SIZE, 2);
         }
       }
     }

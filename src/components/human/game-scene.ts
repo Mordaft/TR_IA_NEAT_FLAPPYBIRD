@@ -2,6 +2,7 @@ import { Bird } from "./bird";
 import { Pipe } from "../common/pipe";
 
 
+export const PIPE_BLOCK_SIZE: number = 60;
 /**
  * Represents the game scene of the Flappy Bird game.
  */
@@ -131,11 +132,11 @@ export class GameScene extends Phaser.Scene {
     for (let i = 0; i < 10; i++) {
       if (i !== hole && i !== hole + 1 && i !== hole + 2) {
         if (i === hole - 1) {
-          this.addPipe(400, i * 60, 0);
+          this.addPipe(400, i * PIPE_BLOCK_SIZE, 0);
         } else if (i === hole + 3) {
-          this.addPipe(400, i * 60, 1);
+          this.addPipe(400, i * PIPE_BLOCK_SIZE, 1);
         } else {
-          this.addPipe(400, i * 60, 2);
+          this.addPipe(400, i * PIPE_BLOCK_SIZE, 2);
         }
       }
     }

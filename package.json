@@ -14,9 +14,12 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
+    "dexie": "^3.2.4",
     "geojson": "^0.5.0",
+    "guid-typescript": "^1.0.9",
     "neataptic": "^1.4.7",
     "phaser": "^3.60.0",
+    "simple-datatables": "^8.0.0",
     "vis-data": "^7.1.6",
     "vis-network": "^9.1.6",
     "webcola": "^3.4.0"
