@@ -123,7 +123,7 @@ export class Graph {
         this.network.setData(this.data);
         this.network.fit();
         this.network.redraw();
-        console.info('Graph data', this.data);
+        // console.info('Graph data', this.data);
       }
 
 }
