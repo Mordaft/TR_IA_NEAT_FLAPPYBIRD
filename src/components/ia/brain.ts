@@ -1,12 +1,12 @@
 import { Neat, Network, architect, methods } from "neataptic";
 
-export const MUTATION_RATE: number = 15;
+export const MUTATION_RATE: number = 25;
 export const START_HIDDEN_SIZE: number = 4;
 export const INPUTS_SIZE: number = 3;
 export const OUTPUTS_SIZE: number = 1;
 export const ELITISM_PERCENT: number = 0.2;
-export const INTERATIONS: number = 2500;
-export const ERROR_TARGET: number = 0.01;
+export const INTERATIONS: number = 1000;
+export const ERROR_TARGET: number = 0.05;
 
 export class Brain {
 
@@ -37,7 +37,7 @@ export class Brain {
                     mutationRate: MUTATION_RATE / 100
                 })
                     .then((result: any) => {
-                        console.log('Evolved!', result, network);
+                        // console.log('Evolved!', result, network);
                         
                         traindata.forEach((element: any) => {
                             let output = network.activate(element.input, { trace: true });
@@ -57,7 +57,7 @@ export class Brain {
                                 // methods.mutation.SUB_CONN,
                                 methods.mutation.MOD_WEIGHT,
                                 methods.mutation.MOD_BIAS,
-                                // methods.mutation.MOD_ACTIVATION,
+                                methods.mutation.MOD_ACTIVATION,
                                 // methods.mutation.ADD_GATE,
                                 // methods.mutation.SUB_GATE,
                                 // methods.mutation.ADD_SELF_CONN,
@@ -108,7 +108,7 @@ export class Brain {
         }
         this.brain.population = newPopulation;
         //Evolution equivalent to brain.evolve(); but this isn't have errors...  <---
-        // this.brain.mutate();
+        this.brain.mutate();
         // console.info('createPopulation: mutated population', this.brain.population);
         this.generation++;
     }

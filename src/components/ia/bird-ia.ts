@@ -77,11 +77,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     let base10topPipeY = (Math.round( Math.abs(topPipe.y) / PIPE_BLOCK_SIZE) + 2);
     let base10bottomPipeY = ( Math.round( Math.abs(bottomPipe.y) / PIPE_BLOCK_SIZE));
 
-    let input = {
-                  myPositionY : base10y,
-                  topPipeY: base10topPipeY,
-                  bottonPipeY: base10bottomPipeY,
-              }
+    let input = [ base10y,
+                  base10topPipeY,
+                  base10bottomPipeY]
+                  
     if (isNaN(base10y)) return false;
     
     let output = this.brain.activate(input, { trace: false });
