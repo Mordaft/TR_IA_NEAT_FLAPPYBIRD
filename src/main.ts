@@ -46,6 +46,11 @@ function hideScreens(){
   }); 
 }
 
+function hideLoader(){
+  document?.querySelector(".loader")?.classList.add("ocu");
+  document?.querySelector("#menu")?.classList.remove("ocu");
+}
+
 window.addEventListener("load", () => {
 
   let game = new Game(GameConfig);
@@ -72,9 +77,8 @@ window.addEventListener("load", () => {
     gameia.pause();
     game.pause();
     document?.querySelector("#stats")?.classList.remove("ocu");
-  
   });
 
-
+  setTimeout(() => { hideLoader(); }, 1000);
 
 });

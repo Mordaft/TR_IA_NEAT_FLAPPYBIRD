@@ -4,8 +4,8 @@ export const MUTATION_RATE: number = 25;
 export const START_HIDDEN_SIZE: number = 4;
 export const INPUTS_SIZE: number = 3;
 export const OUTPUTS_SIZE: number = 1;
-export const ELITISM_PERCENT: number = 0.2;
-export const INTERATIONS: number = 1000;
+export const ELITISM_PERCENT: number = 0.25;
+export const INTERATIONS: number = 1500;
 export const ERROR_TARGET: number = 0.05;
 
 export class Brain {
@@ -25,7 +25,7 @@ export class Brain {
         fetch('/trainingSet/data.json').then(response => {
             response.json().then(data => {
                 // console.log(data);
-                let traindata = data;
+                // let traindata = data;
                 network.evolve(data, {
                     mutation: methods.mutation.ALL,
                     equal: true,
@@ -39,10 +39,10 @@ export class Brain {
                     .then((result: any) => {
                         // console.log('Evolved!', result, network);
                         
-                        traindata.forEach((element: any) => {
-                            let output = network.activate(element.input, { trace: true });
-                            console.log('input', element.input, 'output', Math.round(output)==1, 'expected', element.output==1);
-                        });
+                        // traindata.forEach((element: any) => {
+                        //     let output = network.activate(element.input, { trace: true });
+                        //     console.log('input', element.input, 'output', Math.round(output)==1, 'expected', element.output==1);
+                        // });
 
                         // network.train(data, {
                         //         error: ERROR_TARGET

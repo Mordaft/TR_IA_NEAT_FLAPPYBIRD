@@ -11,7 +11,7 @@ import { Graph } from "../graph/graph";
 import { Brain } from "./brain";
 
 
-export const BIRD_AMOUNT: number = 30;
+export const BIRD_AMOUNT: number = 100;
 export const PIPE_BLOCK_SIZE: number = 60;
 
 /**
