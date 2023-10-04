@@ -50,7 +50,7 @@ export class Graph {
             hierarchical: {
               sortMethod: 'directed',
               shakeTowards: 'roots',
-              direction: 'UD',        // UD, DU, LR, RL
+              direction: 'LR',        // UD, DU, LR, RL
 //              blockShifting: true,
 //              edgeMinimization: true,
               parentCentralization: true,
@@ -78,15 +78,14 @@ export class Graph {
             },
             smooth: false
           },
-          nodes: {
-            shape: "dot"
-          },
-          width: "400px",
+          // nodes: {
+          //   shape: "dot"
+          // },
+          width: "600px",
           height: "600px"
         };
         
         this.network = new vis.Network(this.container, this.data , options);
-      
       
     }
 
@@ -98,10 +97,33 @@ export class Graph {
         let _this = this;
         this.nodesarr = []    
         let mynodes = mygraph.nodes;
-        mynodes.forEach(function(mynode: { id: any; name: any; }){
+        console.info('Graph nodes', mynodes);
+        mynodes.forEach(function(mynode: { id: any; name: any; activation: any; bias: any; }){
+          let nodeLevel =2;
+          let nodeColor = '#4dc3ff';
+          if (mynode.name == 'INPUT') {
+            nodeLevel = 1;
+            nodeColor = '#00cc66';
+          }
+          else if (mynode.name == 'OUTPUT') {
+            nodeLevel = 3;
+            nodeColor = '#990099';
+          }
+
           let node = {
+            shape: "dot",
             id: mynode.id,
-            label: mynode.name 
+            label:  mynode.id + ' - ' + mynode.name + (
+                    (mynode.activation!= undefined ? ('\n activation:' + (Math.round(mynode.activation * 100) / 100).toFixed(2)) : ('\n activation: undefined')) +
+                    (mynode.bias != undefined ? ('\n bias:' + (Math.round(mynode.bias * 100) / 100).toFixed(2)) : ('\n bias: undefined'))
+                    ),
+            fontFace: 'sans-serif',
+            fontSize: '8px',
+            fontColor: '#006442',
+            level: nodeLevel,
+            color: {
+              background: nodeColor
+            }
           }
           _this.nodesarr.push(node);
         })

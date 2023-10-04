@@ -29,6 +29,7 @@ export class GameSceneIA extends Phaser.Scene {
   private firstBottomPipe!: Pipe;
   private nextTopPipe!: Pipe;
   private nextBottomPipe!: Pipe;
+  private currentScore!: number;
   private hiScore!: number;
   private hiFitness!: number;
   private brain!: Brain;
@@ -61,6 +62,7 @@ export class GameSceneIA extends Phaser.Scene {
     this.registry.set("score", -1);
     this.registry.set("birdsAlive", -1);
     this.registry.set("generation", -1);
+    this.currentScore = 0;
     this.birds = [];
 
   }
@@ -91,32 +93,35 @@ export class GameSceneIA extends Phaser.Scene {
 
     this.scoreText = this.add
       .bitmapText(
-        this.sys.canvas.width / 2 - 14,
+        // this.sys.canvas.width / 2 - 14,
+        14,
         2,
         "atari",
         this.registry.values.score,
-        28
+        20
       )
       .setDepth(2);
 
     this.birdsAliveText = this.add
       .bitmapText(
-        this.sys.canvas.width / 2 - 14,
+        // this.sys.canvas.width / 2 - 14,
+        14,
         32,
         "atari",
         this.registry.values.birdsAlive,
-        28
+        20
       )
       .setDepth(2);
 
-    let currentGeneration = this.brain.getGeneration();
+    let currentGeneration = 'Generation: ' + this.brain.getGeneration();
     this.generationText = this.add
       .bitmapText(
-        this.sys.canvas.width / 2 - 14,
+        // this.sys.canvas.width / 2 - 14,
+        14,
         62,
         "atari",
-        currentGeneration.toString(),
-        28
+        currentGeneration,
+        20
       )
       .setDepth(2);
 
@@ -201,7 +206,7 @@ export class GameSceneIA extends Phaser.Scene {
         }
 
       });
-      this.birdsAliveText.setText(this.registry.values.birdsAlive);
+      this.birdsAliveText.setText('Birds Alive: ' + this.registry.values.birdsAlive.toString());
     }
     if (!this.birdsAreAlive()) {
       Phaser.Actions.Call(
@@ -280,11 +285,11 @@ export class GameSceneIA extends Phaser.Scene {
    */
   private addNewRowOfPipes(): void {
     // update the score
-    this.registry.values.score += 1;
-    if (this.registry.values.score > this.hiScore) {
-      this.hiScore = this.registry.values.score;
+    this.currentScore += 1;
+    if (this.currentScore > this.hiScore) {
+      this.hiScore = this.currentScore;
     }
-    let totalScoreText = this.registry.values.score + " (" + this.hiScore + ")";
+    let totalScoreText = 'Score: ' + this.currentScore.toString() + " Max: (" + this.hiScore + ")";
     this.scoreText.setText(totalScoreText);
 
     // randomly pick a number between 1 and 5
