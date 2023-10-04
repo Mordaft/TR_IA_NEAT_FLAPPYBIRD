@@ -128,6 +128,14 @@ export class GameSceneIA extends Phaser.Scene {
 
     this.birds = [];
     let population = this.brain.getPopulation();
+    
+    if (this.hiScore > 0) {
+      this.printReport();
+    }
+    else {
+      this.printInitialReport();
+    } 
+
     for (var i: number = 0; i < BIRD_AMOUNT; i++) {
       this.birds.push(
         new BirdIA(i, population[i], this, 50, 350, "bird")
@@ -218,11 +226,6 @@ export class GameSceneIA extends Phaser.Scene {
         },
         this
       );
-      _this.printReport();
-      // this.brain.createPopulation();
-      // let generation = this.brain.getGeneration();  
-      // this.registry.values.generation = generation.toString();
-      // this.generationText.setText(this.registry.values.generation);
       _this.scene.restart();
     }
   }
@@ -258,6 +261,12 @@ export class GameSceneIA extends Phaser.Scene {
     }
 
   }
+
+  private printInitialReport() {
+    console.info('printInitialReport population fitness');
+    let mygraph = this.brain.getGraph(0);
+    this.graph.graphIt(mygraph);
+  }  
 
 
   /**
