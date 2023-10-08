@@ -1,6 +1,8 @@
 import { Network } from "neataptic";
 import { Pipe } from "../common/pipe";
 import { PIPE_BLOCK_SIZE } from "./game-scene-ia";
+import { Guid } from "guid-typescript";
+import neatNetworkDatabase, { NeatFlappyBirdDatabase } from "../data/database";
 
 /**
  * Represents a bird controlled by an artificial neural network.
@@ -10,28 +12,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
   private fitness!:number;
   private brain: Network;
   private populationIndex: number;
+  private generationId: Guid;
+  private database: NeatFlappyBirdDatabase;
 
-  /**
-   * Gets whether the bird is dead or not.
-   * @returns A boolean indicating whether the bird is dead or not.
-   */
-  public getDead(): boolean {
-    return this.isDead;
-  }
-
-  /**
-   * Sets whether the bird is dead or not.
-   * @param dead A boolean indicating whether the bird is dead or not.
-   */
-  public setDead(dead: boolean): void {
-    if (this.isDead ){
-      return;
-    }
-    this.isDead = dead;
-    //this.fitness-=1;
-    this.setVisible(false);
-    this.setActive(false);
-  }
+ 
 
   /**
    * Creates a new instance of BirdIA.
@@ -42,7 +26,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
    * @param texture The texture key of the bird's sprite.
    * @param frame The frame key of the bird's sprite.
    */
-  constructor(index: number, genome: Network, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
+  constructor(index: number, generationId:Guid, genome: Network, scene: Phaser.Scene, x: number, y: number, texture: string , frame?: string | number )  {
     super(scene, x, y, texture, frame);
 
     // sprite
@@ -59,6 +43,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     this.setGravityY(1000);
 
     this.populationIndex = index;
+    this.generationId = generationId;
+
+    this.database = neatNetworkDatabase;
+
     this.brain = genome;
     this.scene.add.existing(this);
   }
@@ -149,5 +137,27 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
     }
     return me;
   }
+
+ /**
+   * Gets whether the bird is dead or not.
+   * @returns A boolean indicating whether the bird is dead or not.
+   */
+ public getDead(): boolean {
+  return this.isDead;
+}
+
+/**
+ * Sets whether the bird is dead or not.
+ * @param dead A boolean indicating whether the bird is dead or not.
+ */
+public setDead(dead: boolean): void {
+  if (this.isDead ){
+    return;
+  }
+  this.isDead = dead;
+  this.database.updateNeatNetwork(this.generationId, this.populationIndex, this.fitness);
+  this.setVisible(false);
+  this.setActive(false);
+}
 
 }

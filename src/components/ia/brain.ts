@@ -4,9 +4,9 @@ export const MUTATION_RATE: number = 25;
 export const START_HIDDEN_SIZE: number = 4;
 export const INPUTS_SIZE: number = 3;
 export const OUTPUTS_SIZE: number = 1;
-export const ELITISM_PERCENT: number = 0.25;
+export const ELITISM_PERCENT: number = 0.10;
 export const INTERATIONS: number = 1500;
-export const ERROR_TARGET: number = 0.05;
+export const ERROR_TARGET: number = 0.15;
 
 export class Brain {
 
@@ -14,19 +14,26 @@ export class Brain {
     private generation!: number;
     private fitnessFunction: any;
     private birdAmount: number;
+    private network!: Network;
 
+    /**
+     * Creates a new instance of the Brain class.
+     * @constructor
+     * @param {any} fitnessFunction - The fitness function to be used for the neural network.
+     * @param {number} birdAmount - The number of birds to be used for the neural network.
+     */
     constructor(fitnessFunction: any, birdAmount: number) {
         this.fitnessFunction = fitnessFunction;
         this.birdAmount = birdAmount;
         //Variaciones probadas de redes neuronales..
         //let network: Network = architect.Random( INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE , null)
-        let network: Network = architect.Perceptron(INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE);
+        this.network = architect.Perceptron(INPUTS_SIZE, START_HIDDEN_SIZE, OUTPUTS_SIZE);
 
         fetch('/trainingSet/data.json').then(response => {
             response.json().then(data => {
                 // console.log(data);
                 // let traindata = data;
-                network.evolve(data, {
+                this.network.evolve(data, {
                     mutation: methods.mutation.ALL,
                     equal: true,
                     popsize: this.birdAmount,
@@ -35,62 +42,62 @@ export class Brain {
                     error: ERROR_TARGET,
                     iterations: INTERATIONS,
                     mutationRate: MUTATION_RATE / 100
-                })
-                    .then((result: any) => {
-                        // console.log('Evolved!', result, network);
-                        
-                        // traindata.forEach((element: any) => {
-                        //     let output = network.activate(element.input, { trace: true });
-                        //     console.log('input', element.input, 'output', Math.round(output)==1, 'expected', element.output==1);
-                        // });
-
-                        // network.train(data, {
-                        //         error: ERROR_TARGET
-                        //     });
-                        // console.log('Trained!', network);
-
-                        this.brain = new Neat(INPUTS_SIZE, OUTPUTS_SIZE, this.fitnessFunction, {
-                            mutation: [
-                                // methods.mutation.ADD_NODE,
-                                // methods.mutation.SUB_NODE,
-                                // methods.mutation.ADD_CONN,
-                                // methods.mutation.SUB_CONN,
-                                methods.mutation.MOD_WEIGHT,
-                                methods.mutation.MOD_BIAS,
-                                methods.mutation.MOD_ACTIVATION,
-                                // methods.mutation.ADD_GATE,
-                                // methods.mutation.SUB_GATE,
-                                // methods.mutation.ADD_SELF_CONN,
-                                // methods.mutation.SUB_SELF_CONN,
-                                // methods.mutation.ADD_BACK_CONN,
-                                // methods.mutation.SUB_BACK_CONN
-                            ],
-                            popsize: this.birdAmount,
-                            mutationRate: MUTATION_RATE,
-                            elitism: Math.round(ELITISM_PERCENT * this.birdAmount),
-                            network: network,
-                            equal: true
-                        }
-                        );
-
+                }).then((result: any) => {
+                        console.info('Evolved!', result);
+                        this.createBrain();
                         this.generation = 1;
 
                     }).catch((err: any) => {
                         console.error(err);
+                        // reintento en caso de no funcionar bien la libreria (ha ocurrido muy pocas veces)
+                        this.createBrain(); 
+                        this.generation = 1;
                     });
 
             }).catch(err => {
-                console.log(err);
+                console.error(err);
             });
         });
     }
 
-    // createPopulation() {
-    //     this.brain.evolve();
-    //     this.generation++;
-    // }
+    /**
+     * Creates a new NEAT brain with the specified inputs and outputs sizes, fitness function, and mutation options.
+     * @returns void
+     */
+    createBrain() {
+        this.brain = new Neat(INPUTS_SIZE, OUTPUTS_SIZE, this.fitnessFunction, {
+            mutation: [
+                // methods.mutation.ADD_NODE,
+                // methods.mutation.SUB_NODE,
+                // methods.mutation.ADD_CONN,
+                // methods.mutation.SUB_CONN,
+                methods.mutation.MOD_WEIGHT,
+                methods.mutation.MOD_BIAS,
+                methods.mutation.MOD_ACTIVATION,
+                // methods.mutation.ADD_GATE,
+                // methods.mutation.SUB_GATE,
+                // methods.mutation.ADD_SELF_CONN,
+                // methods.mutation.SUB_SELF_CONN,
+                // methods.mutation.ADD_BACK_CONN,
+                // methods.mutation.SUB_BACK_CONN
+            ],
+            popsize: this.birdAmount,
+            mutationRate: MUTATION_RATE,
+            elitism: Math.round(ELITISM_PERCENT * this.birdAmount),
+            network: this.network,
+            equal: true
+        });
+
+    }
     
 
+    /**
+     * Creates a new population of bird genomes for the next generation.
+     * The new population is created by selecting the top performing genomes
+     * from the current population (based on their fitness score) and breeding
+     * them to produce offspring genomes. The remaining genomes in the new
+     * population are randomly generated through mutation.
+     */
     createPopulation() {
         //  Evolution equivalent to brain.evolve(); but this isn't have errors...  --->
         this.brain.sort();
@@ -113,15 +120,29 @@ export class Brain {
         this.generation++;
     }
 
+    /**
+     * Returns the generation number of the current brain.
+     * @returns The generation number of the current brain.
+     */
     getGeneration(): number {
         return this.generation;
     }
 
+    /**
+     * Returns the population of neural networks created by the brain.
+     * @returns An array of neural networks.
+     */
     getPopulation(): Network[] {
         this.createPopulation();
         return this.brain.population;
     }
 
+    /**
+     * Returns the graph of the neural network at the specified index in the population.
+     * If the index is negative, returns the graph of the first neural network in the population.
+     * @param index The index of the neural network in the population.
+     * @returns The graph of the specified neural network.
+     */
     getGraph(index: number) {
         if (index >= 0) {
             return this.brain.population[index].graph(400, 600);

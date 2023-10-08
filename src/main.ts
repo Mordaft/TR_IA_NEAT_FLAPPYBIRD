@@ -1,8 +1,11 @@
+import "../node_modules/simple-datatables/dist/style.css";
 import "./style.css";
 import "phaser";
 import { GameScene } from "./components/human/game-scene";
 import { Game } from "./game/game";
 import { GameSceneIA } from "./components/ia/game-scene-ia";
+import neatNetworkDatabase from "./components/data/database";
+import { Stats } from "./components/stats/stats";
 
 let GameConfig: Phaser.Types.Core.GameConfig = {
   width: 400,
@@ -44,6 +47,11 @@ function hideScreens(){
   document?.querySelectorAll(".screen")?.forEach((screen) => {
     screen.classList.add("ocu");
   }); 
+
+
+  document?.querySelectorAll("#menu > ul > li")?.forEach((menu) => {
+    menu.classList.remove("selected");
+  });
 }
 
 function hideLoader(){
@@ -57,16 +65,25 @@ window.addEventListener("load", () => {
   let gameia = new Game(GameConfigIA);
   gameia.pause();
   game.pause();
-  
+
+  let myNeatNetworkDatabase = neatNetworkDatabase;
+  let stats = new Stats(myNeatNetworkDatabase);
+  stats.initStatsPage();
+
+
   document?.querySelector("#humanlnk")?.addEventListener("click", () => {
     hideScreens();
+    document?.querySelector("#humanlnk")?.parentElement?.classList.add("selected");
     document?.querySelector("#screen-game")?.classList.remove("ocu");
     gameia.pause();
     game.resume();
+    
   });
+  
 
   document?.querySelector("#ialnk")?.addEventListener("click", () => {
     hideScreens();
+    document?.querySelector("#ialnk")?.parentElement?.classList.add("selected");
     document?.querySelector("#screen-game-ia")?.classList.remove("ocu");
     game.pause();
     gameia.resume();
@@ -74,10 +91,15 @@ window.addEventListener("load", () => {
 
   document?.querySelector("#statslnk")?.addEventListener("click", () => {
     hideScreens();
+    document?.querySelector("#statslnk")?.parentElement?.classList.add("selected");
     gameia.pause();
     game.pause();
-    document?.querySelector("#stats")?.classList.remove("ocu");
+    stats.initStatsPage();
+    document?.querySelector("#screen-stats")?.classList.remove("ocu");
   });
+
+
+
 
   setTimeout(() => { hideLoader(); }, 1000);
 

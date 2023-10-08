@@ -51,15 +51,45 @@
 
     <div class="ocu screen " id="screen-stats">
       <div class="td">
-        <h2>Neural Networks</h2>
-        <div id="dataTable"></div>
+        <h3>Generations Table</h3>
+        <div id="dataTableGenerations">
+          <table id="tableGenerations">
+            <thead>
+              <tr>
+                <th>Generation</th>
+                <th>Genome Cout</th>
+                <th>Genome Total Score</th>
+                <th>Genome Average Score</th>
+              </tr>
+            </thead>
+            <tbody id="tableGenerationsBody"></tbody>
+          </table>
+        </div>
       </div>
       <div class="td">
         <br>
       </div>
       <div class="td">
-        <h2>Graph</h2>
-        <div id="graph-table"></div>
+        <h3>Population of a Generation Table</h3>
+        <div id="dataTablePopulation">
+          <table id="tablePopulation">
+            <thead>
+              <tr>
+                <th>Genome</th>
+                <th>Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tablePopulationBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="td">
+        <br>
+      </div>
+      <div class="td">
+        <h3>Selected Network Graph</h3>
+        <div id="graphStats"></div>
       </div>
     </div>
 

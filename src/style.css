@@ -45,14 +45,23 @@ h1 {
   color: black;
 }
 
+.menu-bar li.selected {
+  color: black;
+  font-weight: bold;
+}
+
 
 div {
   display: flex;
   justify-content: center;
 }
 
-div {
+div.datatable-wrapper{
+  display: block !important;
+  font-size: 12px;
+}
 
+div {
   #graph {
       border: 1px solid lightgray;
       width: 100%;

@@ -9,6 +9,9 @@ import { Pipe } from "../common/pipe";
 import { BirdIA } from "./bird-ia";
 import { Graph } from "../graph/graph";
 import { Brain } from "./brain";
+import neatNetworkDatabase, { NeatFlappyBirdDatabase } from "../data/database";
+import { NeatNetwork } from "../data/neatNetwork";
+import { Guid } from "guid-typescript";
 
 
 export const BIRD_AMOUNT: number = 100;
@@ -34,6 +37,7 @@ export class GameSceneIA extends Phaser.Scene {
   private hiFitness!: number;
   private brain!: Brain;
   private graph: Graph;
+  private neatFlappyBirdDatabase: NeatFlappyBirdDatabase;
 
 
   /**
@@ -44,7 +48,9 @@ export class GameSceneIA extends Phaser.Scene {
     super({
       key: "GameSceneIA"
     });
+
     this.hiFitness = 0;
+    this.neatFlappyBirdDatabase = neatNetworkDatabase;
 
     this.brain = new Brain(this.fitness, BIRD_AMOUNT);
 
@@ -113,18 +119,18 @@ export class GameSceneIA extends Phaser.Scene {
       )
       .setDepth(2);
 
-    let currentGeneration = 'Generation: ' + this.brain.getGeneration();
     this.generationText = this.add
       .bitmapText(
         // this.sys.canvas.width / 2 - 14,
         14,
         62,
         "atari",
-        currentGeneration,
+        this.registry.values.generation,
         20
       )
       .setDepth(2);
-
+    let curretGeneration = 'Generation: ' + this.brain.getGeneration();
+    this.generationText.setText(curretGeneration);
 
     this.birds = [];
     let population = this.brain.getPopulation();
@@ -136,11 +142,16 @@ export class GameSceneIA extends Phaser.Scene {
       this.printInitialReport();
     } 
 
+    let generationGuid = Guid.create();
+    let neatNetworks = [];
     for (var i: number = 0; i < BIRD_AMOUNT; i++) {
+      let neatNetwork = new NeatNetwork(population[i], i, generationGuid, 0);
+      neatNetworks.push(neatNetwork);
       this.birds.push(
-        new BirdIA(i, population[i], this, 50, 350, "bird")
+        new BirdIA(i, generationGuid, population[i], this, 50, 350, "bird")
       )
     }
+    this.neatFlappyBirdDatabase.neatnetworks.bulkPut(neatNetworks);
 
 
 
