@@ -35,25 +35,42 @@ export class Stats{
                         rowNavigation: true,
                         searchable: false,
                         fixedHeight: true,
+                        fixedColumns: true,
                         perPage: 10,
-                        perPageSelect: false,
+                        perPageSelect: undefined,
                         scrollY: 'true',
                         data: {
-                            // headings: Object.keys(data[0]),
-                            headings: ['Generation ID', 'Genome Count', 'Score Sum', 'Score Avg'],
+                            headings: ['Generation ID defined as a very long Guuid string', 'Genome Count', 'Score Sum', 'Score Avg'],
                             data: data.map(item => Object.values(item))
                         }
                     });
-
+            this.generationsTable.on("datatable.selectrow", (rowIndex: number | void) => {
+                let generationId = this.generationsTable.data.data[rowIndex as number][0].text;
+                // console.info("datatable.selectrow", rowIndex, generationId);                
+                this.listPopulationTable(generationId as string);
+            });
         });
     }
 
     listPopulationTable(generationId: string) {
-        this.database.getNeatNetworksByGenerationId(generationId).toArray().then((data: any[]) => {
-            this.populationTable.insert(data);
-            this.populationTable.update();
-            this.populationTable.refresh();
-        });
+        this.database.getNeatNetworksByGenerationId(generationId).toArray().then((data) => {
+            let lista: any[] = data.map(item => [ item.getPopulationIndex(), item.getScore(), item.getNetwork()]);
+            // console.info("listPopulationTable", lista);
+            this.populationTable.destroy();
+            this.populationTable = new DataTable("#tablePopulation",{
+                        rowNavigation: true,
+                        searchable: false,
+                        fixedHeight: true,
+                        fixedColumns: true,
+                        perPage: 10,
+                        perPageSelect: undefined,
+                        scrollY: 'true',
+                        data: {
+                            headings: ['Genome Index', 'Score', 'Action'],
+                            data: lista
+                        }
+                    });
+            });
     }
     
     initStatsPage() {

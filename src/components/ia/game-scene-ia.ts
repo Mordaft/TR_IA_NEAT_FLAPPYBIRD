@@ -274,7 +274,7 @@ export class GameSceneIA extends Phaser.Scene {
   }
 
   private printInitialReport() {
-    console.info('printInitialReport population fitness');
+    console.info('printInitialReport population fitness', this.brain.getGraph(0));
     let mygraph = this.brain.getGraph(0);
     this.graph.graphIt(mygraph);
   }  

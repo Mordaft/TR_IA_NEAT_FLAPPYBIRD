@@ -56,6 +56,10 @@ export class Brain {
 
             }).catch(err => {
                 console.error(err);
+                // reintento en caso de no funcionar bien la libreria (ha ocurrido muy pocas veces)
+                this.createBrain(); 
+                this.generation = 1;
+                
             });
         });
     }

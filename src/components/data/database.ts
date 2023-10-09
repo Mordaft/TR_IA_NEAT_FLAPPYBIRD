@@ -72,7 +72,16 @@ export class NeatFlappyBirdDatabase extends Dexie {
         return ret;
 
     }
-    
+
+    getPopulationByGenerationId(generationId: string): Promise<any[][]> {
+        return this.getNeatNetworksByGenerationId(generationId).toArray().then((data) => {
+            return data.map(
+                item => Object.values(item)
+            );
+        });
+    }
+
+
     /**
      * Returns a collection of NeatNetworks that belong to a specific generation.
      * @param generationId The ID of the generation to retrieve NeatNetworks for.
