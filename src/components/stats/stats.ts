@@ -1,20 +1,26 @@
 import { DataTable } from "simple-datatables";
 import { NeatFlappyBirdDatabase } from "../data/database";
+import { Graph } from "../graph/graph";
 
 export class Stats{
 
     database: NeatFlappyBirdDatabase;
     generationsTable: DataTable;
     populationTable: DataTable;
+    graph: Graph;
+    selectedGenerationId!: string;
+    lastNeatNetworksByGenerationId!: any[];
 
     constructor(database: NeatFlappyBirdDatabase){
         this.database = database;
         
+        this.graph = new Graph("graphStats");
+
         this.generationsTable = new DataTable("#tableGenerations", 
             {   
                 data: {  
                     data: [],
-                    headings: ['Generation ID', 'Genome Count', 'Score Sum', 'Score Avg']
+                    headings: ['Generation ID', 'Genome Count', 'Genome Score Sum', 'Genome Score Avg']
                 }
             }
         );
@@ -28,54 +34,77 @@ export class Stats{
     }
 
     listGenerationsTable() {
-        console.info("listGenerationsTable");
+        let _this = this;
+        // console.info("listGenerationsTable");
         this.database.getGenerations().then((data) => {
             this.generationsTable.destroy();
             this.generationsTable = new DataTable("#tableGenerations",{
                         rowNavigation: true,
                         searchable: false,
-                        fixedHeight: true,
+                        // fixedHeight: true,
                         fixedColumns: true,
-                        perPage: 10,
-                        perPageSelect: undefined,
-                        scrollY: 'true',
+                        // perPage: 10,
+                        paging: false,
+                        // perPageSelect: undefined,
+                        scrollY: '30vh',
                         data: {
-                            headings: ['Generation ID defined as a very long Guuid string', 'Genome Count', 'Score Sum', 'Score Avg'],
+                            headings: ['Generation ID', 'Count', 'Score Sum', 'Score Avg'],
                             data: data.map(item => Object.values(item))
                         }
                     });
             this.generationsTable.on("datatable.selectrow", (rowIndex: number | void) => {
-                let generationId = this.generationsTable.data.data[rowIndex as number][0].text;
-                // console.info("datatable.selectrow", rowIndex, generationId);                
-                this.listPopulationTable(generationId as string);
+                _this.selectedGenerationId = this.generationsTable.data.data[rowIndex as number][0].text as string;
+                // console.info("datatable.selectrow", rowIndex, this.selectedGenerationId);                
+                _this.listPopulationTable(this.selectedGenerationId);
             });
         });
     }
 
     listPopulationTable(generationId: string) {
+        let _this = this;
         this.database.getNeatNetworksByGenerationId(generationId).toArray().then((data) => {
-            let lista: any[] = data.map(item => [ item.getPopulationIndex(), item.getScore(), item.getNetwork()]);
+            _this.lastNeatNetworksByGenerationId = data.map(item => [ item.getPopulationIndex(), item.getScore(), item.getNetwork()]);
             // console.info("listPopulationTable", lista);
             this.populationTable.destroy();
             this.populationTable = new DataTable("#tablePopulation",{
                         rowNavigation: true,
                         searchable: false,
-                        fixedHeight: true,
+                        // fixedHeight: true,
                         fixedColumns: true,
-                        perPage: 10,
-                        perPageSelect: undefined,
-                        scrollY: 'true',
+                        // perPage: 10,
+                        paging: false,
+                        // perPageSelect: undefined,
+                        scrollY: '30vh',
+                        columns: [
+                                { select: 2, render: (data: any, cell: any, row: any) => {  
+                                        return `<button class="btn btn-primary btn-sm showGraphButton" data-click="${row}">Show</button>`;
+                                    } 
+                                },
+                            ],
                         data: {
                             headings: ['Genome Index', 'Score', 'Action'],
-                            data: lista
+                            data: _this.lastNeatNetworksByGenerationId
                         }
                     });
+            }).then(() => {
+                document.querySelectorAll(".showGraphButton").forEach((element) => { 
+                    // console.info("showGraphButton", element);
+                    element.addEventListener("click", (event) => {
+                        let genomeElement = (event.target as HTMLElement);
+                        _this.showNetwork(parseInt(genomeElement.getAttribute("data-click") as string));
+                    });
+                });
             });
     }
     
     initStatsPage() {
         this.listGenerationsTable();
         this.populationTable.data.data = [];
+    }
+
+    showNetwork(index: number) {
+        // console.info("showNetwork", this.lastNeatNetworksByGenerationId[index][2]);
+        this.graph.graphIt(this.lastNeatNetworksByGenerationId[index][2]);
     }
 
 }

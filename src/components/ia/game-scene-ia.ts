@@ -14,7 +14,7 @@ import { NeatNetwork } from "../data/neatNetwork";
 import { Guid } from "guid-typescript";
 
 
-export const BIRD_AMOUNT: number = 100;
+export const BIRD_AMOUNT: number = 25;
 export const PIPE_BLOCK_SIZE: number = 60;
 
 /**
@@ -201,28 +201,30 @@ export class GameSceneIA extends Phaser.Scene {
 
     if (this.birdsAreAlive()) {
       this.birds.forEach(function (bird: BirdIA) {
-
-        if (bird.x >= _this.firstTopPipe.x + 60) {
-          _this.firstTopPipe = _this.nextTopPipe;
-          _this.firstBottomPipe = _this.nextBottomPipe;
-        }
-
-        bird.update(_this.firstTopPipe, _this.firstBottomPipe);
-        _this.physics.overlap(
-          bird,
-          _this.pipes,
-          function () {
+        if (bird.getDead() == false) {
+          let birdSaveScore = false;
+          if (bird.x >= _this.firstTopPipe.x + 60) {
+            _this.firstTopPipe = _this.nextTopPipe;
+            _this.firstBottomPipe = _this.nextBottomPipe;
+            birdSaveScore = true;
+          }
+  
+          bird.update(_this.firstTopPipe, _this.firstBottomPipe, birdSaveScore);
+          _this.physics.overlap(
+            bird,
+            _this.pipes,
+            function () {
+              bird.setDead(true);
+            },
+            undefined,
+            _this
+          );       
+          if (bird.y + bird.height > _this.sys.canvas.height ||
+            bird.y < -1
+          ) {
             bird.setDead(true);
-          },
-          undefined,
-          _this
-        );
-
-        if (bird.y > _this.sys.canvas.height ||
-          bird.y < -1
-        ) {
-          bird.setDead(true);
-        }
+          }
+      }
 
       });
       this.birdsAliveText.setText('Birds Alive: ' + this.registry.values.birdsAlive.toString());
@@ -266,7 +268,7 @@ export class GameSceneIA extends Phaser.Scene {
 
     
     if (hiFitnessIndex >= 0) {
-      console.info('printReport population fitness', this.hiFitness, hiFitnessIndex);
+      // console.info('printReport population fitness', this.hiFitness, hiFitnessIndex);
       let mygraph = this.brain.getGraph(hiFitnessIndex);
       this.graph.graphIt(mygraph);
     }
@@ -274,7 +276,7 @@ export class GameSceneIA extends Phaser.Scene {
   }
 
   private printInitialReport() {
-    console.info('printInitialReport population fitness', this.brain.getGraph(0));
+    // console.info('printInitialReport population fitness', this.brain.getGraph(0));
     let mygraph = this.brain.getGraph(0);
     this.graph.graphIt(mygraph);
   }  

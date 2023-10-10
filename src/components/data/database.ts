@@ -17,7 +17,7 @@ export class NeatFlappyBirdDatabase extends Dexie {
         super("FlappyBirdIADatabase");
         
         this.version(1).stores({
-            neatnetworks: '++id, [generationId+populationIndex], created',
+            neatnetworks: '++id, [generationId+populationIndex], score, created',
         });
 
         this.neatnetworks = this.table("neatnetworks");

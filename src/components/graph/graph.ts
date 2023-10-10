@@ -97,7 +97,7 @@ export class Graph {
         let _this = this;
         this.nodesarr = []    
         let mynodes = mygraph.nodes;
-        console.info('Graph nodes', mynodes);
+        // console.info('Graph nodes', mynodes);
         mynodes.forEach(function(mynode: { id: any; name: any; activation: any; bias: any; }){
           let nodeLevel =2;
           let nodeColor = '#4dc3ff';
@@ -141,7 +141,7 @@ export class Graph {
           nodes: this.nodesarr,
           edges: this.edgessarr
         }
-        console.info('Graph data', this.data);
+        // console.info('Graph data', this.data);
         this.network.setData(this.data);
         this.network.fit();
         this.network.redraw();

@@ -84,7 +84,7 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
    * @param topPipe The top pipe of the gap the bird is trying to pass through.
    * @param bottomPipe The bottom pipe of the gap the bird is trying to pass through.
    */
-  update(topPipe:Pipe , bottomPipe:Pipe ): void {
+  update(topPipe:Pipe , bottomPipe:Pipe, saveScore: boolean ): void {
     // Every tick fitness grow:
     if (this.isDead ){
       return;
@@ -92,6 +92,10 @@ export class BirdIA extends Phaser.Physics.Arcade.Sprite {
 
     //let distanceToMiddleRatio = Math.abs( 1 /  ( 1 + Math.abs(this.y - ( topPipe.y + ((topPipe.y - bottomPipe.y) / 2 )))) )
     this.fitness +=  1;
+    if (saveScore == true){
+      // console.info('saveScore', saveScore, this.generationId, this.populationIndex, this.fitness);
+      this.database.updateNeatNetwork(this.generationId, this.populationIndex, this.fitness);
+    }
 
     // handle angle change
     if (this.angle < 30) {

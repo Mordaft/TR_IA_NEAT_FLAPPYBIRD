@@ -59,6 +59,7 @@ div {
 div.datatable-wrapper{
   display: block !important;
   font-size: 12px;
+  width: 100%;
 }
 
 div {
@@ -72,6 +73,10 @@ div {
 div.table {display: table; }
 div.tr {display: table-row; }
 div.td {display: table-cell; padding-left: 20px; }
+
+div.screen {
+  width: 90%;
+}
 
 .footer {
   padding: 10px;
@@ -125,9 +130,6 @@ div.td {display: table-cell; padding-left: 20px; }
 .loader span:nth-child(4) {
   background:  rgba(0, 100, 66, 0.3);
 }
-
-
-
 
 .loader span:not(:last-child) {
   animation: animate 1.5s linear infinite;
