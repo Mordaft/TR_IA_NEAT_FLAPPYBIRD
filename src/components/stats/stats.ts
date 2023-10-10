@@ -46,7 +46,7 @@ export class Stats{
                         // perPage: 10,
                         paging: false,
                         // perPageSelect: undefined,
-                        scrollY: '30vh',
+                        scrollY: '50vh',
                         data: {
                             headings: ['Generation ID', 'Count', 'Score Sum', 'Score Avg'],
                             data: data.map(item => Object.values(item))
@@ -69,15 +69,15 @@ export class Stats{
             this.populationTable = new DataTable("#tablePopulation",{
                         rowNavigation: true,
                         searchable: false,
-                        // fixedHeight: true,
+                        fixedHeight: false,
                         fixedColumns: true,
                         // perPage: 10,
                         paging: false,
                         // perPageSelect: undefined,
-                        scrollY: '30vh',
+                        scrollY: '50vh',
                         columns: [
                                 { select: 2, render: (data: any, cell: any, row: any) => {  
-                                        return `<button class="btn btn-primary btn-sm showGraphButton" data-click="${row}">Show</button>`;
+                                        return `<button class="button showGraphButton" data-click="${row}">Show</button>`;
                                     } 
                                 },
                             ],
