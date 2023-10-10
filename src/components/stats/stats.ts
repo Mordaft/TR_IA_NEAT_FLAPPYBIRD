@@ -76,7 +76,7 @@ export class Stats{
                         // perPageSelect: undefined,
                         scrollY: '50vh',
                         columns: [
-                                { select: 2, render: (data: any, cell: any, row: any) => {  
+                                { select: 2, render: (_data: any, _cell: any, row: any) => {  
                                         return `<button class="button showGraphButton" data-click="${row}">Show</button>`;
                                     } 
                                 },
