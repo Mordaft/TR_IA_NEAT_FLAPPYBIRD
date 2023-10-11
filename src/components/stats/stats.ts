@@ -39,7 +39,7 @@ export class Stats{
         this.database.getGenerations().then((data) => {
             this.generationsTable.destroy();
             this.generationsTable = new DataTable("#tableGenerations",{
-                        rowNavigation: true,
+                        // rowNavigation: true,
                         searchable: false,
                         // fixedHeight: true,
                         fixedColumns: true,
@@ -52,10 +52,17 @@ export class Stats{
                             data: data.map(item => Object.values(item))
                         }
                     });
-            this.generationsTable.on("datatable.selectrow", (rowIndex: number | void) => {
-                _this.selectedGenerationId = this.generationsTable.data.data[rowIndex as number][0].text as string;
-                // console.info("datatable.selectrow", rowIndex, this.selectedGenerationId);                
-                _this.listPopulationTable(this.selectedGenerationId);
+            this.generationsTable.on("datatable.selectrow", (rowIndex: number | void, event: Event | void) => {
+                if (event != undefined){
+                    let rowElement:HTMLElement = (event.target as HTMLElement)?.parentElement as HTMLElement;
+                    rowElement.parentElement?.querySelectorAll("tr").forEach((element) => {
+                        element.classList.remove("selected");
+                    });
+                    rowElement.classList.add("selected");
+                    _this.selectedGenerationId = this.generationsTable.data.data[rowIndex as number][0].text as string;
+                    // console.info("datatable.selectrow", rowIndex, this.selectedGenerationId);                
+                    _this.listPopulationTable(this.selectedGenerationId);
+                }
             });
         });
     }
@@ -67,7 +74,7 @@ export class Stats{
             // console.info("listPopulationTable", lista);
             this.populationTable.destroy();
             this.populationTable = new DataTable("#tablePopulation",{
-                        rowNavigation: true,
+                        // rowNavigation: true,
                         searchable: false,
                         fixedHeight: false,
                         fixedColumns: true,
@@ -91,7 +98,12 @@ export class Stats{
                     // console.info("showGraphButton", element);
                     element.addEventListener("click", (event) => {
                         let genomeElement = (event.target as HTMLElement);
-                        _this.showNetwork(parseInt(genomeElement.getAttribute("data-click") as string));
+                        let indexSelected = parseInt(genomeElement.getAttribute("data-click") as string);
+                        let subTitleElement = document.querySelector("#graphSubTitle");
+                        if (subTitleElement){
+                            subTitleElement.innerHTML = "Generation ID: " + _this.selectedGenerationId + " - Genome Index: " + indexSelected;
+                        }
+                        _this.showNetwork(indexSelected);
                     });
                 });
             });
