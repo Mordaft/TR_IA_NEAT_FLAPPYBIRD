@@ -97,8 +97,8 @@ export class Stats{
                 document.querySelectorAll(".showGraphButton").forEach((element) => { 
                     // console.info("showGraphButton", element);
                     element.addEventListener("click", (event) => {
-                        // let genomeElement = (event.target as HTMLElement);
-                        console.info("showGraphButton", genomeElement.parentElement?.parentElement?.children[0].textContent);
+                        let genomeElement = (event.target as HTMLElement);
+                        // console.info("showGraphButton", genomeElement.parentElement?.parentElement?.children[0].textContent);
                         //let indexSelected = parseInt(genomeElement.getAttribute("data-click") as string);
                         let indexSelected = parseInt(genomeElement.parentElement?.parentElement?.children[0]?.textContent as string);
                         let subTitleElement = document.querySelector("#graphSubTitle");
