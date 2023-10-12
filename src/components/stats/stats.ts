@@ -83,8 +83,8 @@ export class Stats{
                         // perPageSelect: undefined,
                         scrollY: '50vh',
                         columns: [
-                                { select: 2, render: (_data: any, _cell: any, row: any) => {  
-                                        return `<button class="button showGraphButton" data-click="${row}">Show</button>`;
+                                { select: 2, render: (_data: any, _cell: any, _row: any) => {  
+                                        return `<button class="button showGraphButton">Show</button>`;
                                     } 
                                 },
                             ],
@@ -97,8 +97,10 @@ export class Stats{
                 document.querySelectorAll(".showGraphButton").forEach((element) => { 
                     // console.info("showGraphButton", element);
                     element.addEventListener("click", (event) => {
-                        let genomeElement = (event.target as HTMLElement);
-                        let indexSelected = parseInt(genomeElement.getAttribute("data-click") as string);
+                        // let genomeElement = (event.target as HTMLElement);
+                        console.info("showGraphButton", genomeElement.parentElement?.parentElement?.children[0].textContent);
+                        //let indexSelected = parseInt(genomeElement.getAttribute("data-click") as string);
+                        let indexSelected = parseInt(genomeElement.parentElement?.parentElement?.children[0]?.textContent as string);
                         let subTitleElement = document.querySelector("#graphSubTitle");
                         if (subTitleElement){
                             subTitleElement.innerHTML = "Generation ID: " + _this.selectedGenerationId + " - Genome Index: " + indexSelected;
