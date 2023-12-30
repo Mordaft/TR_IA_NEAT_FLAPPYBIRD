@@ -6,6 +6,7 @@ export class NeatNetwork {
     private created: Date;
     private network: any;
     private score: number;
+    private evolveError: number;
     private generationId: string;
     private populationIndex: number;
 
@@ -14,7 +15,8 @@ export class NeatNetwork {
      * @param network The network to be used.
      * @param generationId The ID of the generation.
      */
-    constructor(network: Network, populationIndex: number, generationId: Guid, score: number){
+    constructor(network: Network, populationIndex: number, generationId: Guid, score: number, evolveError: number) {
+        this.evolveError = evolveError;
         this.network = network.graph(600, 600);
         this.generationId = generationId.toString();
         this.score = score;
@@ -65,5 +67,14 @@ export class NeatNetwork {
      */
     public getPopulationIndex(): number {    
         return this.populationIndex;
+    }
+
+
+    /**
+     * Obtiene el error de evolución.
+     * @returns El error de evolución.
+     */
+    public getEvolveError(): number {
+        return this.evolveError;
     }
 }

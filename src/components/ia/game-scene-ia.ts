@@ -145,7 +145,7 @@ export class GameSceneIA extends Phaser.Scene {
     let generationGuid = Guid.create();
     let neatNetworks = [];
     for (var i: number = 0; i < BIRD_AMOUNT; i++) {
-      let neatNetwork = new NeatNetwork(population[i], i, generationGuid, 0);
+      let neatNetwork = new NeatNetwork(population[i], i, generationGuid, 0, this.brain.getEvolveError());
       neatNetworks.push(neatNetwork);
       this.birds.push(
         new BirdIA(i, generationGuid, population[i], this, 50, 350, "bird")
@@ -303,7 +303,7 @@ export class GameSceneIA extends Phaser.Scene {
   /**
    * Adds a new row of pipes to the game scene and updates the score.
    * Randomly picks a number between 1 and 5 to determine the position of the hole in the pipes.
-   * Adds 6 pipes with one big hole at position hole and hole + 1 and hole +2.
+   * Adds 7 pipe blocks with one big hole at position hole and hole + 1 and hole +2.
    */
   private addNewRowOfPipes(): void {
     // update the score

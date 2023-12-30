@@ -9,12 +9,12 @@ export const INTERATIONS: number = 1500;
 export const ERROR_TARGET: number = 0.15;
 
 export class Brain {
-
     private brain!: Neat;
     private generation!: number;
     private fitnessFunction: any;
     private birdAmount: number;
     private network!: Network;
+    private evolveError!: number;
 
     /**
      * Creates a new instance of the Brain class.
@@ -44,20 +44,20 @@ export class Brain {
                     mutationRate: MUTATION_RATE / 100
                 }).then((result: any) => {
                         console.info('Evolved!', result);
-                        this.createBrain();
+                        this.createBrain(result.error);
                         this.generation = 1;
 
                     }).catch((err: any) => {
                         console.error(err);
                         // reintento en caso de no funcionar bien la libreria (ha ocurrido muy pocas veces)
-                        this.createBrain(); 
+                        this.createBrain(ERROR_TARGET); 
                         this.generation = 1;
                     });
 
             }).catch(err => {
                 console.error(err);
                 // reintento en caso de no funcionar bien la libreria (ha ocurrido muy pocas veces)
-                this.createBrain(); 
+                this.createBrain(ERROR_TARGET); 
                 this.generation = 1;
                 
             });
@@ -68,7 +68,8 @@ export class Brain {
      * Creates a new NEAT brain with the specified inputs and outputs sizes, fitness function, and mutation options.
      * @returns void
      */
-    createBrain() {
+    createBrain(error: number) {
+        this.evolveError = error;
         this.brain = new Neat(INPUTS_SIZE, OUTPUTS_SIZE, this.fitnessFunction, {
             mutation: [
                 // methods.mutation.ADD_NODE,
@@ -154,4 +155,12 @@ export class Brain {
         else return this.brain.population[0].graph(400, 600);
     }
 
+    /**
+     * Obtiene el error de evolución.
+     * @returns El error de evolución.
+     */
+    getEvolveError(): number {
+        return this.evolveError;
+      }
+  
 }

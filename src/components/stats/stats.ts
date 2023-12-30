@@ -20,7 +20,7 @@ export class Stats{
             {   
                 data: {  
                     data: [],
-                    headings: ['Generation ID', 'Genome Count', 'Genome Score Sum', 'Genome Score Avg']
+                    headings: ['Generation ID', 'Count', 'Error', 'Score Sum', 'Score Avg']
                 }
             }
         );
@@ -48,7 +48,7 @@ export class Stats{
                         // perPageSelect: undefined,
                         scrollY: '50vh',
                         data: {
-                            headings: ['Generation ID', 'Count', 'Score Sum', 'Score Avg'],
+                            headings: ['Generation ID', 'Count', 'Error', 'Score Sum', 'Score Avg'],
                             data: data.map(item => Object.values(item))
                         }
                     });

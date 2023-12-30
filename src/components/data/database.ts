@@ -38,7 +38,7 @@ export class NeatFlappyBirdDatabase extends Dexie {
         
     async getGenerations(): Promise<any[]> {
         // console.info("getGenerations");
-        const summary = new Map<string, {generationId: string, genomeCount: number, scoreSum: number, scoreAvg: number}>();
+        const summary = new Map<string, {generationId: string, genomeCount :number, evolveError:string, scoreSum: number, scoreAvg: number}>();
         let ret = await this.neatnetworks.each(neatnetwork => {
             // console.info("getGenerations each", neatnetwork);
             let genome:NeatNetwork = neatnetwork;
@@ -51,6 +51,7 @@ export class NeatFlappyBirdDatabase extends Dexie {
                     {
                         generationId: genome.getGenerationId().toString(), 
                         genomeCount: genomeCount,
+                        evolveError: parseFloat(neatnetwork.evolveError).toFixed(2),
                         scoreSum: scoreSum,
                         scoreAvg: scoreAvg
                     }
@@ -60,6 +61,7 @@ export class NeatFlappyBirdDatabase extends Dexie {
                         {
                             generationId: genome.getGenerationId().toString(), 
                             genomeCount: 1,
+                            evolveError: parseFloat(neatnetwork.evolveError).toFixed(2),
                             scoreSum: neatnetwork.score,
                             scoreAvg: neatnetwork.score
                         }
